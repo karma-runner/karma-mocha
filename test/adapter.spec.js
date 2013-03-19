@@ -4,13 +4,13 @@
  */
 
 describe('adapter mocha', function() {
-  var Testacular = window.__testacular__.constructor;
+  var Karma = window.__karma__.constructor;
 
   describe('reporter', function() {
     var runner, tc;
 
     beforeEach(function() {
-      tc = new Testacular(new MockSocket(), {});
+      tc = new Karma(new MockSocket(), {});
       runner = new Emitter();
       reporter = new (createMochaReporterConstructor(tc))(runner);
     });
