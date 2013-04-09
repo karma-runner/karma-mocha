@@ -54,13 +54,15 @@ var createMochaReporterConstructor = function(tc) {
     });
 
     runner.on('test end', function(test) {
+      var skipped = test.pending === true;
+
       var result = {
         id: '',
         description: test.title,
         suite: [],
         success: test.state === 'passed',
-        skipped: test.pending === true,
-        time: test.duration,
+        skipped: skipped,
+        time: skipped ? 0 : test.duration,
         log: test.$errors || []
       };
 
