@@ -66,6 +66,24 @@ describe('adapter mocha', function() {
       });
 
 
+      it('should report time 0 for skipped tests', function () {
+        spyOn(tc, 'result').andCallFake(function(result) {
+          expect(result.skipped).toBe(true);
+          expect(result.time).toBe(0);
+        });
+
+        var mockMochaResult = {
+          pending: true,
+          parent: {root: true}
+        };
+
+        runner.emit('test', mockMochaResult);
+        runner.emit('test end', mockMochaResult);
+
+        expect(tc.result).toHaveBeenCalled();
+      });
+
+
       it('should report failed result', function() {
         spyOn(tc, 'result').andCallFake(function(result) {
           expect(result.success).toBe(false);
