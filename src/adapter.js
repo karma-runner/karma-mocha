@@ -80,6 +80,9 @@ var createMochaReporterConstructor = function(tc) {
 
 var createMochaStartFn = function(mocha) {
   return function(config) {
+    if(config.grep){
+      mocha.grep(config.grep);
+    }
     mocha.run();
   };
 };
