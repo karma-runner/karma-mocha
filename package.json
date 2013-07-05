@@ -30,5 +30,10 @@
   "peerDependencies": {
     "karma": "~0.9"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "contributors": [
+    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>",
+    "Dave Geddes <davidcgeddes@gmail.com>",
+    "Karolis Narkevicius <karolis.n@gmail.com>"
+  ]
 }
