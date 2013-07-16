@@ -4,9 +4,6 @@
 
 
 window.__karma__.start = createMochaStartFn(window.mocha);
-window.dump = createDumpFn(window.__karma__, function(value) {
-  return window.angular && window.angular.mock && window.angular.mock.dump(value) || value;
-});
 window.mocha.setup({reporter: createMochaReporterConstructor(window.__karma__), ui: 'bdd',
     globals: ['__cov*']});
 })(window);
