@@ -1,6 +1,6 @@
 {
   "name": "karma-mocha",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "A Karma plugin. Adapter for Mocha testing framework.",
   "main": "lib/index.js",
   "scripts": {
