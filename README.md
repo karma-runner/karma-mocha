@@ -8,8 +8,8 @@ The easiest way is to keep `karma-mocha` as a devDependency in your `package.jso
 ```json
 {
   "devDependencies": {
-    "karma": "~0.9",
-    "karma-mocha": "~0.0.1"
+    "karma": "~0.10",
+    "karma-mocha": "~0.1"
   }
 }
 ```
