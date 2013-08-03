@@ -29,7 +29,7 @@
     "grunt-npm": "~0.0.2"
   },
   "peerDependencies": {
-    "karma": "~0.9",
+    "karma": ">=0.9",
     "mocha": "*"
   },
   "license": "MIT",
