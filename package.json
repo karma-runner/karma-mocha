@@ -16,8 +16,7 @@
     "mocha"
   ],
   "author": "Vojta Jina <vojta.jina@gmail.com>",
-  "dependencies": {
-  },
+  "dependencies": {},
   "devDependencies": {
     "grunt": "~0.4",
     "grunt-contrib-jshint": "~0.3",
@@ -36,6 +35,7 @@
   "contributors": [
     "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>",
     "Dave Geddes <davidcgeddes@gmail.com>",
+    "JONATHAN PARK <jonathan@silvenstudios.com>",
     "Karolis Narkevicius <karolis.n@gmail.com>"
   ]
 }
