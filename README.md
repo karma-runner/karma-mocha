@@ -34,6 +34,28 @@ module.exports = function(config) {
 };
 ```
 
+If you want to pass configuration options directly to mocha you can
+do this in the following way
+
+```js
+// karma.conf.js
+module.exports = function(config) {
+  config.set({
+    frameworks: ['mocha'],
+
+    files: [
+      '*.js'
+    ],
+
+    client: {
+      mocha: {
+        ui: 'tdd'
+      }
+    }
+  });
+};
+```
+
 ----
 
 For more information on Karma see the [homepage].
