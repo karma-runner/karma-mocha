@@ -86,3 +86,35 @@ var createMochaStartFn = function(mocha) {
     mocha.run();
   };
 };
+
+// Default configuration
+var mochaConfig = {
+  reporter: createMochaReporterConstructor(window.__karma__),
+  ui: 'bdd',
+  globals: ['__cov*']
+};
+
+// Pass options from client.mocha to mocha
+var createConfigObject = function(karma) {
+  if (!karma.config || !karma.config.mocha) {
+    return mochaConfig;
+  }
+
+  // Copy all properties to mochaConfig
+  for (var key in karma.config.mocha) {
+
+    // except for reporter
+    if (key === 'reporter') {
+      return;
+    }
+
+    // and merge the globals if they exist.
+    if (key === 'globals' && karma.config.mocha[key].concat === 'function') {
+      return mochaConfig.globals.concat(karma.config.mocha[key]);
+    }
+
+    mochaConfig[key] = karma.config.mocha[key];
+  }
+  return mochaConfig;
+};
+
