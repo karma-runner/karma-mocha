@@ -34,6 +34,36 @@ module.exports = function(config) {
 };
 ```
 
+## Custom Configuration
+If you want to customize your mocha experience you can do something like:
+
+```js
+// In your karma.conf.js
+
+module.exports = function(config) {
+var OPTIONS = {
+                grep
+            ,   ui
+            ,   reporter
+            ,   timeout
+            ,   invert
+            ,   ignoreLeaks
+            ,   growl
+            ,   globals
+	}
+  config.set({
+    frameworks: ['mocha'],
+
+    files: [
+      '*.js'
+    ],
+    mocha.theMagicMethodThatIsUsedToInsertUserConfiguredVariables(OPTIONS);
+  });
+};
+
+```
+
+
 ----
 
 For more information on Karma see the [homepage].
