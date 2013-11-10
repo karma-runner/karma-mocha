@@ -26,6 +26,8 @@ var Configuration = {
 	,   ui : ["bdd"]
 };
 
+//don't mess with the stuff below this
+
 var finalConfig = (function removeExtraProperties(configurationObject){
 	var configuration = configurationObject;
 	if ( configuration ){
