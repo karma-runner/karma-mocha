@@ -142,7 +142,27 @@ describe('adapter mocha', function() {
         runner.emit('fail', mockMochaHook, {message: 'hook failed'});
 
         expect(tc.result).toHaveBeenCalled();
-      })
+      });
+      
+      it('should end the test only once on uncaught exceptions', function() {
+        spyOn(tc, 'result').andCallFake(function(result) {
+          expect(result.success).toBe(false);
+          expect(result.skipped).toBe(false);
+          expect(result.log).toEqual(['Uncaught error.']);
+        });
+
+        var mockMochaResult = {
+          parent: {title: 'desc2', root: true},
+          state: "failed",
+          title: 'should do something'
+        };
+
+        runner.emit('test', mockMochaResult);
+        runner.emit('fail', mockMochaResult, {message: 'Uncaught error.', uncaught: true});
+        runner.emit('test end', mockMochaResult);
+
+        expect(tc.result.calls.length).toBe(1);
+      });
     })
   });
 });
