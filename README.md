@@ -56,6 +56,29 @@ module.exports = function(config) {
 };
 ```
 
+Or if you ues karma with grunt, you should add the mocha configuration
+to the Gruntfile.js like this, because the plugin grunt-karma would
+overwrite this value
+
+```js
+// Gruntfile.js
+
+grunt.initConfig({
+  karma: {
+    test: {
+      client: {
+        mocha: {
+          bail: true,
+          ui: 'bdd'
+        }
+      },
+      configFile: 'karma.conf.js'
+    }
+  }
+});
+```
+
+
 ----
 
 For more information on Karma see the [homepage].
