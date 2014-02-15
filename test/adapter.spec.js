@@ -143,7 +143,7 @@ describe('adapter mocha', function() {
 
         expect(tc.result).toHaveBeenCalled();
       });
-      
+
       it('should end the test only once on uncaught exceptions', function() {
         spyOn(tc, 'result').andCallFake(function(result) {
           expect(result.success).toBe(false);
@@ -164,5 +164,65 @@ describe('adapter mocha', function() {
         expect(tc.result.calls.length).toBe(1);
       });
     })
+  });
+
+  describe('createConfigObject', function() {
+    beforeEach(function() {
+      this.originalMochaConfig = mochaConfig;
+
+      mochaConfig = {
+        ui: 'bdd',
+        globals: ['__cov']
+      };
+
+      this.karma = new Karma(new MockSocket(), {});
+      this.karma.config = {};
+    });
+
+    afterEach(function() {
+      mochaConfig = this.originalMochaConfig;
+    });
+
+    it('should return default config if karma does not define client config', function() {
+      this.karma.config = null;
+
+      expect(createConfigObject(this.karma)).toBe(mochaConfig);
+    });
+
+    it('should return default config if the client config havent properties mocha', function() {
+      expect(createConfigObject(this.karma)).toBe(mochaConfig);
+    });
+
+    it('should pass client.mocha options to mocha config', function() {
+      this.karma.config.mocha = {
+        slow: 10
+      };
+
+      expect(createConfigObject(this.karma).slow).toBe(10);
+    });
+
+    it('should rewrite ui options from default config', function() {
+      this.karma.config.mocha = {
+        ui: 'tdd'
+      };
+
+      expect(createConfigObject(this.karma).ui).toBe('tdd');
+    });
+
+    it('should ignore propertie reporter from client config', function() {
+      this.karma.config.mocha = {
+        reporter: 'test'
+      };
+
+      expect(createConfigObject(this.karma).reporter).not.toBe('test');
+    });
+
+    it('should merge the globals from client config if they exist', function() {
+      this.karma.config.mocha = {
+        globals: ['test']
+      };
+
+      expect(createConfigObject(this.karma).globals).toEqual(['__cov', 'test']);
+    });
   });
 });
