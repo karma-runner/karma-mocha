@@ -105,12 +105,13 @@ var createConfigObject = function(karma) {
 
     // except for reporter
     if (key === 'reporter') {
-      return;
+      continue;
     }
 
     // and merge the globals if they exist.
-    if (key === 'globals' && karma.config.mocha[key].concat === 'function') {
-      return mochaConfig.globals.concat(karma.config.mocha[key]);
+    if (key === 'globals') {
+      mochaConfig.globals = mochaConfig.globals.concat(karma.config.mocha[key]);
+      continue;
     }
 
     mochaConfig[key] = karma.config.mocha[key];

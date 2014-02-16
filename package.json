@@ -21,7 +21,7 @@
     "grunt": "~0.4",
     "grunt-contrib-jshint": "~0.3",
     "karma": "~0.9",
-    "karma-jasmine": "*",
+    "karma-jasmine": "~0.1",
     "grunt-karma": "~0.4",
     "grunt-auto-release": "~0.0.2",
     "grunt-bump": "~0.0.7",
