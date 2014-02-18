@@ -143,7 +143,7 @@ describe('adapter mocha', function() {
 
         expect(tc.result).toHaveBeenCalled();
       });
-      
+
       it('should end the test only once on uncaught exceptions', function() {
         spyOn(tc, 'result').andCallFake(function(result) {
           expect(result.success).toBe(false);
@@ -163,6 +163,43 @@ describe('adapter mocha', function() {
 
         expect(tc.result.calls.length).toBe(1);
       });
-    })
+    });
+  });
+
+  describe('createMochaStartFn', function() {
+    beforeEach(function() {
+      this.mockMocha = {
+        grep: function(){},
+        run: function(){},
+      };
+    });
+
+    it('should pass grep argument to mocha', function() {
+      spyOn(this.mockMocha, 'grep');
+
+      createMochaStartFn(this.mockMocha)({
+        args: ['--grep', 'test']
+      });
+
+      expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
+    });
+
+    it('should pass grep argument to mocha if we called the run with --grep=xxx', function() {
+      spyOn(this.mockMocha, 'grep');
+
+      createMochaStartFn(this.mockMocha)({
+        args: ['--grep=test']
+      });
+
+      expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
+    });
+
+    it('should not require client arguments', function() {
+      var that = this;
+
+      expect(function(){
+        createMochaStartFn(that.mockMocha)({});
+      }).not.toThrow();
+    });
   });
 });
