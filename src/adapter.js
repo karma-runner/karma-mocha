@@ -80,8 +80,11 @@ var createMochaReporterConstructor = function(tc) {
 
 var createMochaStartFn = function(mocha) {
   return function(config) {
-    if(config && config.args && config.args.grep){
-      mocha.grep(config.args.grep);
+    if (config && config.args) {
+      config.args.join(' ').replace(/--grep[\s|=]+(\S+)?\s*/, function(match, grep) {
+        mocha.grep(grep);
+        return match;
+      });
     }
     mocha.run();
   };
