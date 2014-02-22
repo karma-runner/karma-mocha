@@ -80,12 +80,27 @@ var createMochaReporterConstructor = function(tc) {
 
 var createMochaStartFn = function(mocha) {
   return function(config) {
-    if (config && config.args) {
-      config.args.join(' ').replace(/--grep[\s|=]+(\S+)?\s*/, function(match, grep) {
-        mocha.grep(grep);
-        return match;
-      });
+    var clientArguments;
+    config = config || {};
+    clientArguments = config.args;
+
+    if (clientArguments) {
+      if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
+        clientArguments.join(' ').replace(/--grep[\s|=]+(\S+)?\s*/, function(match, grep) {
+          mocha.grep(grep);
+          return match;
+        });
+      }
+
+      /**
+       * TODO(maksimrv): remove when karma-grunt plugin will pass
+       * clientArguments how Array
+       */
+      if (clientArguments.grep) {
+        mocha.grep(clientArguments.grep);
+      }
     }
+
     mocha.run();
   };
 };
