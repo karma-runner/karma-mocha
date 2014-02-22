@@ -194,6 +194,18 @@ describe('adapter mocha', function() {
       expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
     });
 
+    it('should pass grep argument to mocha if config.args contains property grep', function(){
+        spyOn(this.mockMocha, 'grep');
+
+        createMochaStartFn(this.mockMocha)({
+            args: {
+                grep: 'test'
+            }
+        });
+
+        expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
+    });
+
     it('should not require client arguments', function() {
       var that = this;
 
