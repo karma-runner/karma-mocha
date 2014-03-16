@@ -10,7 +10,7 @@ describe('adapter mocha', function() {
     var runner, tc;
 
     beforeEach(function() {
-      tc = new Karma(new MockSocket(), {});
+      tc = new Karma(new MockSocket(), null, null, null, {search: ''});
       runner = new Emitter();
       reporter = new (createMochaReporterConstructor(tc))(runner);
     });
@@ -224,7 +224,7 @@ describe('adapter mocha', function() {
         globals: ['__cov']
       };
 
-      this.karma = new Karma(new MockSocket(), {});
+      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''});
       this.karma.config = {};
     });
 
