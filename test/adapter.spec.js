@@ -15,6 +15,35 @@ describe('adapter mocha', function() {
     sandbox.restore();
   });
 
+  describe('createMochaReporterConstructor', function(){
+    beforeEach(function() {
+      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''});
+      this.karma.config = {
+        mocha: {
+          reporter: 'html'
+        }
+      };
+
+      sandbox.stub(window, 'createMochaReporterNode');
+    });
+
+    it('should take reporter from client config on debug page', function(){
+      expect(createMochaReporterConstructor(this.karma, '/debug.html')).to.equal('html');
+    });
+
+    it('should create node for mocha reporter', function(){
+      createMochaReporterConstructor(this.karma, '/debug.html');
+
+      expect(createMochaReporterNode.called).to.equal(true);
+    });
+
+    it('should define console reporter if does not pass reporter in config', function(){
+      this.karma.config.mocha.reporter = null;
+
+      expect(createMochaReporterConstructor(this.karma, '/debug.html')).not.to.equal(null);
+    });
+  });
+
   describe('reporter', function() {
     var runner, tc;
 
