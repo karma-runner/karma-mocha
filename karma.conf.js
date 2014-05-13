@@ -1,6 +1,6 @@
 module.exports = function(config) {
   config.set({
-    frameworks: ['jasmine'],
+    frameworks: ['mocha', 'chai', 'sinon'],
 
     files: [
       'src/*.js',

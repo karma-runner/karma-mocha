@@ -5,6 +5,15 @@
 
 describe('adapter mocha', function() {
   var Karma = window.__karma__.constructor;
+  var sandbox;
+
+  beforeEach(function() {
+    sandbox = sinon.sandbox.create();
+  });
+
+  afterEach(function() {
+    sandbox.restore();
+  });
 
   describe('reporter', function() {
     var runner, tc;
@@ -20,10 +29,10 @@ describe('adapter mocha', function() {
 
       it('should report total number of specs', function() {
         runner.total = 12;
-        spyOn(tc, 'info');
+        sandbox.spy(tc, 'info');
 
         runner.emit('start');
-        expect(tc.info).toHaveBeenCalledWith({total: 12});
+        expect(tc.info.getCall(0).args).to.deep.eq([{total: 12}]);
       });
     });
 
@@ -31,10 +40,10 @@ describe('adapter mocha', function() {
     describe('end', function() {
 
       it('should report complete', function() {
-        spyOn(tc, 'complete');
+        sandbox.spy(tc, 'complete');
 
         runner.emit('end');
-        expect(tc.complete).toHaveBeenCalled();
+        expect(tc.complete.called).to.eq(true);
       });
     });
 
@@ -42,34 +51,34 @@ describe('adapter mocha', function() {
     describe('test end', function() {
 
       it('should report result', function() {
-        spyOn(tc, 'result').andCallFake(function(result) {
-          expect(result.id).toBeDefined();
-          expect(result.description).toBe('should do something');
-          expect(result.suite instanceof Array).toBe(true);
-          expect(result.success).toBe(true);
-          expect(result.skipped).toBe(false);
-          expect(result.log instanceof Array).toBe(true);
-          expect(result.time).toBe(123);
+        sandbox.stub(tc, 'result', function(result) {
+          expect(result.id).to.not.be.undefined;
+          expect(result.description).to.eq('should do something');
+          expect(result.suite instanceof Array).to.eq(true);
+          expect(result.success).to.eq(true);
+          expect(result.skipped).to.to.eql(false);
+          expect(result.log instanceof Array).to.eq(true);
+          expect(result.time).to.eq(123);
         });
 
         var mockMochaResult = {
           duration: 123,
           parent: {title: 'desc2', parent: {title: 'desc1', root: true}, root: false},
-          state: "passed",
+          state: 'passed',
           title: 'should do something'
         };
 
         runner.emit('test', mockMochaResult);
         runner.emit('test end', mockMochaResult);
 
-        expect(tc.result).toHaveBeenCalled();
+        expect(tc.result.called).to.eq(true);
       });
 
 
-      it('should report time 0 for skipped tests', function () {
-        spyOn(tc, 'result').andCallFake(function(result) {
-          expect(result.skipped).toBe(true);
-          expect(result.time).toBe(0);
+      it('should report time 0 for skipped tests', function() {
+        sandbox.stub(tc, 'result', function(result) {
+          expect(result.skipped).to.eq(true);
+          expect(result.time).to.eq(0);
         });
 
         var mockMochaResult = {
@@ -80,20 +89,20 @@ describe('adapter mocha', function() {
         runner.emit('test', mockMochaResult);
         runner.emit('test end', mockMochaResult);
 
-        expect(tc.result).toHaveBeenCalled();
+        expect(tc.result.called).to.eq(true);
       });
 
 
       it('should report failed result', function() {
-        spyOn(tc, 'result').andCallFake(function(result) {
-          expect(result.success).toBe(false);
-          expect(result.skipped).toBe(false);
-          expect(result.log).toEqual(['Big trouble.', 'Another fail.']);
+        sandbox.stub(tc, 'result', function(result) {
+          expect(result.success).to.to.eql(false);
+          expect(result.skipped).to.to.eql(false);
+          expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.']);
         });
 
         var mockMochaResult = {
           parent: {title: 'desc2', root: true},
-          state: "failed",
+          state: 'failed',
           title: 'should do something'
         };
 
@@ -103,13 +112,13 @@ describe('adapter mocha', function() {
         runner.emit('fail', mockMochaResult, {message: 'Another fail.'});
         runner.emit('test end', mockMochaResult);
 
-        expect(tc.result).toHaveBeenCalled();
+        expect(tc.result.called).to.eq(true);
       });
 
 
       it('should report suites', function() {
-        spyOn(tc, 'result').andCallFake(function(result) {
-          expect(result.suite).toEqual(['desc1', 'desc2']);
+        sandbox.stub(tc, 'result', function(result) {
+          expect(result.suite).to.deep.eq(['desc1', 'desc2']);
         });
 
         var mockMochaResult = {
@@ -120,16 +129,16 @@ describe('adapter mocha', function() {
         runner.emit('test', mockMochaResult);
         runner.emit('test end', mockMochaResult);
 
-        expect(tc.result).toHaveBeenCalled();
+        expect(tc.result.called).to.eq(true);
       });
     });
 
     describe('fail', function() {
       it('should end test on hook failure', function() {
-        spyOn(tc, 'result').andCallFake(function(result) {
-          expect(result.success).toBe(false);
-          expect(result.skipped).toBe(false);
-          expect(result.log).toEqual(['hook failed']);
+        sandbox.stub(tc, 'result', function(result) {
+          expect(result.success).to.to.eql(false);
+          expect(result.skipped).to.to.eql(false);
+          expect(result.log).to.deep.eq(['hook failed']);
         });
 
         var mockMochaHook = {
@@ -141,19 +150,19 @@ describe('adapter mocha', function() {
         runner.emit('hook', mockMochaHook);
         runner.emit('fail', mockMochaHook, {message: 'hook failed'});
 
-        expect(tc.result).toHaveBeenCalled();
+        expect(tc.result.called).to.eq(true);
       });
 
       it('should end the test only once on uncaught exceptions', function() {
-        spyOn(tc, 'result').andCallFake(function(result) {
-          expect(result.success).toBe(false);
-          expect(result.skipped).toBe(false);
-          expect(result.log).toEqual(['Uncaught error.']);
+        sandbox.stub(tc, 'result', function(result) {
+          expect(result.success).to.to.eql(false);
+          expect(result.skipped).to.to.eql(false);
+          expect(result.log).to.deep.eq(['Uncaught error.']);
         });
 
         var mockMochaResult = {
           parent: {title: 'desc2', root: true},
-          state: "failed",
+          state: 'failed',
           title: 'should do something'
         };
 
@@ -161,7 +170,7 @@ describe('adapter mocha', function() {
         runner.emit('fail', mockMochaResult, {message: 'Uncaught error.', uncaught: true});
         runner.emit('test end', mockMochaResult);
 
-        expect(tc.result.calls.length).toBe(1);
+        expect(tc.result.called).to.eq(true);
       });
     });
   });
@@ -170,32 +179,32 @@ describe('adapter mocha', function() {
     beforeEach(function() {
       this.mockMocha = {
         grep: function(){},
-        run: function(){},
+        run: function(){}
       };
     });
 
     it('should pass grep argument to mocha', function() {
-      spyOn(this.mockMocha, 'grep');
+      sandbox.spy(this.mockMocha, 'grep');
 
       createMochaStartFn(this.mockMocha)({
         args: ['--grep', 'test']
       });
 
-      expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
     });
 
     it('should pass grep argument to mocha if we called the run with --grep=xxx', function() {
-      spyOn(this.mockMocha, 'grep');
+      sandbox.spy(this.mockMocha, 'grep');
 
       createMochaStartFn(this.mockMocha)({
         args: ['--grep=test']
       });
 
-      expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
     });
 
     it('should pass grep argument to mocha if config.args contains property grep', function(){
-        spyOn(this.mockMocha, 'grep');
+        sandbox.spy(this.mockMocha, 'grep');
 
         createMochaStartFn(this.mockMocha)({
             args: {
@@ -203,7 +212,7 @@ describe('adapter mocha', function() {
             }
         });
 
-        expect(this.mockMocha.grep).toHaveBeenCalledWith('test');
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
     });
 
     it('should not require client arguments', function() {
@@ -211,7 +220,7 @@ describe('adapter mocha', function() {
 
       expect(function(){
         createMochaStartFn(that.mockMocha)({});
-      }).not.toThrow();
+      }).to.not.throw();
     });
   });
 
@@ -235,11 +244,11 @@ describe('adapter mocha', function() {
     it('should return default config if karma does not define client config', function() {
       this.karma.config = null;
 
-      expect(createConfigObject(this.karma)).toBe(mochaConfig);
+      expect(createConfigObject(this.karma)).to.eq(mochaConfig);
     });
 
     it('should return default config if the client config havent properties mocha', function() {
-      expect(createConfigObject(this.karma)).toBe(mochaConfig);
+      expect(createConfigObject(this.karma)).to.eq(mochaConfig);
     });
 
     it('should pass client.mocha options to mocha config', function() {
@@ -247,7 +256,7 @@ describe('adapter mocha', function() {
         slow: 10
       };
 
-      expect(createConfigObject(this.karma).slow).toBe(10);
+      expect(createConfigObject(this.karma).slow).to.eq(10);
     });
 
     it('should rewrite ui options from default config', function() {
@@ -255,7 +264,7 @@ describe('adapter mocha', function() {
         ui: 'tdd'
       };
 
-      expect(createConfigObject(this.karma).ui).toBe('tdd');
+      expect(createConfigObject(this.karma).ui).to.eq('tdd');
     });
 
     it('should ignore propertie reporter from client config', function() {
@@ -263,7 +272,7 @@ describe('adapter mocha', function() {
         reporter: 'test'
       };
 
-      expect(createConfigObject(this.karma).reporter).not.toBe('test');
+      expect(createConfigObject(this.karma).reporter).not.to.eq('test');
     });
 
     it('should merge the globals from client config if they exist', function() {
@@ -271,7 +280,7 @@ describe('adapter mocha', function() {
         globals: ['test']
       };
 
-      expect(createConfigObject(this.karma).globals).toEqual(['__cov', 'test']);
+      expect(createConfigObject(this.karma).globals).to.deep.eq(['__cov', 'test']);
     });
   });
 });
