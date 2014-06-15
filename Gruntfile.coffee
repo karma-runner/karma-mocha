@@ -1,4 +1,11 @@
 module.exports = (grunt) ->
+  jshintOptions = require('./.jshintrc')
+
+  merge = (object, properties) ->
+    for key, val of properties
+      object[key] = val
+    object
+
   grunt.initConfig
     pkgFile: 'package.json'
 
@@ -15,26 +22,13 @@ module.exports = (grunt) ->
         files:
           src: '<%= files.adapter %>'
         options:
-          browser: true,
+          browser: true
           strict: false
+          unused: false
           undef: false
           camelcase: false
 
-      options:
-        quotmark: 'single'
-        camelcase: true
-        strict: true
-        trailing: true
-        curly: true
-        eqeqeq: true
-        immed: true
-        latedef: true
-        newcap: true
-        noarg: true
-        sub: true
-        undef: true
-        boss: true
-        globals: {}
+      options: merge(boss: true, jshintOptions)
 
     karma:
       adapter:
@@ -56,14 +50,21 @@ module.exports = (grunt) ->
         commitMessage: 'chore: release v%VERSION%'
         pushTo: 'upstream'
 
+    jscs:
+      all:
+        files: src: '<%= files.adapter %>'
+      options:
+        config: '.jscs.json'
+
   grunt.loadTasks 'tasks'
   grunt.loadNpmTasks 'grunt-contrib-jshint'
+  grunt.loadNpmTasks 'grunt-jscs-checker'
   grunt.loadNpmTasks 'grunt-karma'
   grunt.loadNpmTasks 'grunt-npm'
   grunt.loadNpmTasks 'grunt-bump'
   grunt.loadNpmTasks 'grunt-auto-release'
 
-  grunt.registerTask 'default', ['build', 'jshint', 'test']
+  grunt.registerTask 'default', ['build', 'jshint', 'jscs', 'test']
   grunt.registerTask 'test', ['karma']
 
   grunt.registerTask 'release', 'Build, bump and publish to NPM.', (type) ->
