@@ -16,7 +16,22 @@ var formatError = function(error) {
 };
 
 
-var createMochaReporterConstructor = function(tc) {
+var createMochaReporterNode = function() {
+  var mochaRunnerNode = document.createElement('div');
+  mochaRunnerNode.setAttribute('id', 'mocha');
+  document.body.appendChild(mochaRunnerNode);
+};
+
+var haveMochaConfig = function(karma) {
+  return karma.config && karma.config.mocha;
+};
+
+var createMochaReporterConstructor = function(tc, pathname) {
+  // Set custom reporter on debug page
+  if (/debug.html$/.test(pathname) && haveMochaConfig(tc) && tc.config.mocha.reporter) {
+    createMochaReporterNode();
+    return tc.config.mocha.reporter;
+  }
 
   // TODO(vojta): error formatting
   return function(runner) {
@@ -107,7 +122,7 @@ var createMochaStartFn = function(mocha) {
 
 // Default configuration
 var mochaConfig = {
-  reporter: createMochaReporterConstructor(window.__karma__),
+  reporter: createMochaReporterConstructor(window.__karma__, window.location.pathname),
   ui: 'bdd',
   globals: ['__cov*']
 };
