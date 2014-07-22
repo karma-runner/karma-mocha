@@ -101,10 +101,17 @@ var createMochaStartFn = function(mocha) {
 
     if (clientArguments) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
-        clientArguments.join(' ').replace(/--grep[\s|=]+(\S+)?\s*/, function(match, grep) {
-          mocha.grep(grep);
-          return match;
-        });
+        clientArguments.reduce(function(isGrepArg, arg) {
+          var match;
+          if (isGrepArg) {
+            mocha.grep(arg);
+          } else if (arg === '--grep') {
+            return true;
+          } else if (match = /--grep=(.*)/.exec(arg)) {
+            mocha.grep(match[1]);
+          }
+          return false;
+        }, false);
       }
 
       /**
