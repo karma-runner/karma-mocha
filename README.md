@@ -65,7 +65,22 @@ karma start &
 karma run -- --grep=<pattern>
 ```
 
+or
+
+```js
+module.exports = function(config) {
+  config.set({
+    ...
+    client: {
+      args: ['--grep', '<pattern>'],
+      ...
+    }
+  });
+};
+```
+
 `--grep` argument pass directly to mocha
+
 
 ----
 
