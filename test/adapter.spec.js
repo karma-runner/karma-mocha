@@ -233,13 +233,13 @@ describe('adapter mocha', function() {
     });
 
     it('should pass grep argument to mocha if config.args contains property grep', function(){
-        sandbox.spy(this.mockMocha, 'grep');
+      sandbox.spy(this.mockMocha, 'grep');
 
-        createMochaStartFn(this.mockMocha)({
-            args: {
-                grep: 'test'
-            }
-        });
+      createMochaStartFn(this.mockMocha)({
+          args: {
+              grep: 'test'
+          }
+      });
 
       expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
     });
