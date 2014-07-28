@@ -216,30 +216,29 @@ describe('adapter mocha', function() {
       sandbox.spy(this.mockMocha, 'grep');
 
       createMochaStartFn(this.mockMocha)({
-        args: ['--grep', 'test']
+        args: ['--grep', 'test test']
       });
 
-      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test test']);
     });
-
     it('should pass grep argument to mocha if we called the run with --grep=xxx', function() {
       sandbox.spy(this.mockMocha, 'grep');
 
       createMochaStartFn(this.mockMocha)({
-        args: ['--grep=test']
+        args: ['--grep=test test']
       });
 
-      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test test']);
     });
 
     it('should pass grep argument to mocha if config.args contains property grep', function(){
-        sandbox.spy(this.mockMocha, 'grep');
+      sandbox.spy(this.mockMocha, 'grep');
 
-        createMochaStartFn(this.mockMocha)({
-            args: {
-                grep: 'test'
-            }
-        });
+      createMochaStartFn(this.mockMocha)({
+          args: {
+              grep: 'test'
+          }
+      });
 
       expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
     });

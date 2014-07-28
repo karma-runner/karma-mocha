@@ -15,6 +15,13 @@ var formatError = function(error) {
   return message;
 };
 
+// non-compliant version of Array::reduce.call (requires memo argument)
+var arrayReduce = function(array, reducer, memo) {
+  for (var i = 0, len = array.length; i < len; i++) {
+    memo = reducer(memo, array[i]);
+  }
+  return memo;
+};
 
 var createMochaReporterNode = function() {
   var mochaRunnerNode = document.createElement('div');
@@ -101,10 +108,17 @@ var createMochaStartFn = function(mocha) {
 
     if (clientArguments) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
-        clientArguments.join(' ').replace(/--grep[\s|=]+(\S+)?\s*/, function(match, grep) {
-          mocha.grep(grep);
-          return match;
-        });
+        arrayReduce(clientArguments, function(isGrepArg, arg) {
+          var match;
+          if (isGrepArg) {
+            mocha.grep(arg);
+          } else if (arg === '--grep') {
+            return true;
+          } else if (match = /--grep=(.*)/.exec(arg)) {
+            mocha.grep(match[1]);
+          }
+          return false;
+        }, false);
       }
 
       /**
