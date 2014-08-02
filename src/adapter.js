@@ -9,7 +9,7 @@ var formatError = function(error) {
     }
 
     // remove mocha stack entries
-    return stack.replace(/\n.+\/mocha\/mocha.js\?\d*\:.+(?=(\n|$))/g, '');
+    return stack.replace(/\n.+\/mocha\/mocha.js\?\w*\:.+(?=(\n|$))/g, '');
   }
 
   return message;

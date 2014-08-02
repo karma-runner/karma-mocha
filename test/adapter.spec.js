@@ -103,7 +103,6 @@ describe('adapter mocha', function() {
         expect(tc.result.called).to.eq(true);
       });
 
-
       it('should report time 0 for skipped tests', function() {
         sandbox.stub(tc, 'result', function(result) {
           expect(result.skipped).to.eq(true);
@@ -152,7 +151,7 @@ describe('adapter mocha', function() {
 
         var mockMochaResult = {
           parent: {title: 'desc2', parent: {title: 'desc1', parent: {root: true}, root: false}, root: false},
-          title: 'should do something',
+          title: 'should do something'
         };
 
         runner.emit('test', mockMochaResult);
@@ -201,6 +200,37 @@ describe('adapter mocha', function() {
 
         expect(tc.result.called).to.eq(true);
       });
+
+      it('should remove mocha stack entries', function() {
+        sandbox.stub(tc, 'result', function(result) {
+          var log = result.log[0];
+          expect(log).to.not.contain('/mocha/mocha.js');
+          expect(log).to.contain('/spec/controllers/list/formCtrlSpec.js');
+        });
+
+        var mockMochaResult = {
+          parent: {root: true}
+        };
+
+        var stack =
+            'at $httpBackend (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:1149)\n' +
+            'at sendReq (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8408)\n' +
+            'at http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8125\n' +
+            'at http://localhost:8080/base/test/client/spec/controllers/list/formCtrlSpec.js?67eaca0f801cf45a86802a262618a6cfdc6a47be:110\n' +
+            'at invoke (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:4068)\n' +
+            'at workFn (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:2194)\n' +
+            'at callFn (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4338)\n' +
+            'at http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4331\n' +
+            'at next (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4653)\n' +
+            'at http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4663\n' +
+            'at next (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4601)\n';
+
+        runner.emit('test', mockMochaResult);
+        runner.emit('fail', mockMochaResult, {message: 'Another fail.', stack: stack});
+        runner.emit('test end', mockMochaResult);
+
+        expect(tc.result.called).to.eq(true);
+      });
     });
   });
 
@@ -221,6 +251,7 @@ describe('adapter mocha', function() {
 
       expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test test']);
     });
+
     it('should pass grep argument to mocha if we called the run with --grep=xxx', function() {
       sandbox.spy(this.mockMocha, 'grep');
 
