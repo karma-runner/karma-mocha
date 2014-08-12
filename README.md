@@ -1,4 +1,4 @@
-# karma-mocha [![Build Status](https://travis-ci.org/karma-runner/karma-mocha.png?branch=master)](https://travis-ci.org/karma-runner/karma-mocha)
+# karma-mocha [![Build Status](https://travis-ci.org/karma-runner/karma-mocha.svg?branch=master)](https://travis-ci.org/karma-runner/karma-mocha)
 
 > Adapter for the [Mocha](http://visionmedia.github.io/mocha/) testing framework.
 
