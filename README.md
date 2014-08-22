@@ -18,7 +18,7 @@ You can simple do it by:
 npm install karma-mocha --save-dev
 ```
 
-How install `karma` you can red [here.](http://karma-runner.github.io/0.12/intro/installation.html)
+How install `karma` you can read [here.](http://karma-runner.github.io/0.12/intro/installation.html)
 
 ## Configuration
 Following code shows the default configuration...
