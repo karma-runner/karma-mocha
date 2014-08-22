@@ -342,4 +342,16 @@ describe('adapter mocha', function() {
       expect(createConfigObject(this.karma).globals).to.deep.eq(['__cov', 'test']);
     });
   });
+
+  describe('formatError', function () {
+
+    it('should properly format exceptions that contains \n in their message', function () {
+      var errLines = formatError(new Error('foo\nbar')).split('\n');
+      expect(errLines[0]).to.contain('foo');
+      expect(errLines[1]).to.equal('bar');
+      expect(errLines[2]).to.not.contain('foo');
+      expect(errLines[3]).to.not.contain('bar');
+    });
+
+  });
 });
