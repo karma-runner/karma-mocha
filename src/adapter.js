@@ -3,8 +3,7 @@ var formatError = function(error) {
   var message = error.message;
 
   if (stack) {
-    var firstLine = stack.substring(0, stack.indexOf('\n'));
-    if (message && firstLine.indexOf(message) === -1) {
+    if (message && stack.indexOf(message) === -1) {
       stack = message + '\n' + stack;
     }
 
