@@ -1,6 +1,6 @@
 # karma-mocha [![Build Status](https://travis-ci.org/karma-runner/karma-mocha.svg?branch=master)](https://travis-ci.org/karma-runner/karma-mocha)
 
-> Adapter for the [Mocha](http://visionmedia.github.io/mocha/) testing framework.
+> Adapter for the [Mocha](http://mochajs.org/) testing framework.
 
 ## Installation
 
