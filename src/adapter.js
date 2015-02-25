@@ -37,20 +37,22 @@ var debugGrep = '';
 
 var createMochaReporterConstructor = function(tc, pathname) {
 
-  var tdoc = window.top.document;
-  var contextNode = tdoc.getElementById('context');
-  debugIframe = tdoc.getElementById('debug');
-  if (!debugIframe){
-    debugIframe = tdoc.createElement('iframe');
-    debugIframe.width = '100%';
-    debugIframe.height = '100%';
-    debugIframe.src = 'about:blank';
-    debugIframe.id = 'debug';
-    debugIframe.style.cssText = [
-      'border-top:1px solid #ddd;',
-      'border-bottom:1px solid #ddd;'
-    ].join('');
-    contextNode.parentNode.insertBefore(debugIframe, contextNode);
+  if (window.top !== window){
+    var tdoc = window.top.document;
+    var contextNode = tdoc.getElementById('context');
+    debugIframe = tdoc.getElementById('debug');
+    if (!debugIframe){
+      debugIframe = tdoc.createElement('iframe');
+      debugIframe.width = '100%';
+      debugIframe.height = '100%';
+      debugIframe.src = 'about:blank';
+      debugIframe.id = 'debug';
+      debugIframe.style.cssText = [
+        'border-top:1px solid #ddd;',
+        'border-bottom:1px solid #ddd;'
+      ].join('');
+      contextNode.parentNode.insertBefore(debugIframe, contextNode);
+    }
   }
 
   // Set custom reporter on debug page
