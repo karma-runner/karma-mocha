@@ -32,7 +32,27 @@ var haveMochaConfig = function(karma) {
   return karma.config && karma.config.mocha;
 };
 
+var debugIframe = null;
+var debugGrep = '';
+
 var createMochaReporterConstructor = function(tc, pathname) {
+
+  var tdoc = window.top.document;
+  var contextNode = tdoc.getElementById('context');
+  debugIframe = tdoc.getElementById('debug');
+  if (!debugIframe){
+    debugIframe = tdoc.createElement('iframe');
+    debugIframe.width = '100%';
+    debugIframe.height = '100%';
+    debugIframe.src = 'about:blank';
+    debugIframe.id = 'debug';
+    debugIframe.style.cssText = [
+      'border-top:1px solid #ddd;',
+      'border-bottom:1px solid #ddd;'
+    ].join('');
+    contextNode.parentNode.insertBefore(debugIframe, contextNode);
+  }
+
   // Set custom reporter on debug page
   if (/debug.html$/.test(pathname) && haveMochaConfig(tc) && tc.config.mocha.reporter) {
     createMochaReporterNode();
@@ -59,6 +79,13 @@ var createMochaReporterConstructor = function(tc, pathname) {
       tc.complete({
         coverage: window.__coverage__
       });
+      if (debugIframe){
+        if (debugGrep){
+          debugIframe.src = '/debug.html?grep=' + debugGrep;
+        } else {
+          debugIframe.src = '/debug.html?';
+        }
+      }
     });
 
     runner.on('test', function(test) {
@@ -104,6 +131,7 @@ var createMochaStartFn = function(mocha) {
     var clientArguments;
     config = config || {};
     clientArguments = config.args;
+    debugGrep = '';
 
     if (clientArguments) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
@@ -115,6 +143,7 @@ var createMochaStartFn = function(mocha) {
             return true;
           } else if (match = /--grep=(.*)/.exec(arg)) {
             mocha.grep(match[1]);
+            debugGrep = match[1];
           }
           return false;
         }, false);
