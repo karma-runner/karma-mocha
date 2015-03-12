@@ -139,13 +139,14 @@ var createMochaStartFn = function(mocha) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
         arrayReduce(clientArguments, function(isGrepArg, arg) {
           var match;
-          if (isGrepArg) {
-            mocha.grep(arg);
-          } else if (arg === '--grep') {
-            return true;
-          } else if (match = /--grep=(.*)/.exec(arg)) {
+          if (match = /--grep=(.*)/.exec(arg)) {
             mocha.grep(match[1]);
             debugGrep = match[1];
+          } else if (isGrepArg) {
+            mocha.grep(arg);
+            debugGrep = arg;
+          } else if (arg === '--grep') {
+            return true;
           }
           return false;
         }, false);
