@@ -110,11 +110,11 @@ var createMochaStartFn = function(mocha) {
         arrayReduce(clientArguments, function(isGrepArg, arg) {
           var match;
           if (isGrepArg) {
-            mocha.grep(arg);
+            mocha.grep(new RegExp(arg));
           } else if (arg === '--grep') {
             return true;
           } else if (match = /--grep=(.*)/.exec(arg)) {
-            mocha.grep(match[1]);
+            mocha.grep(new RegExp(match[1]));
           }
           return false;
         }, false);
