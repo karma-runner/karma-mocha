@@ -1,0 +1,13 @@
+{
+  "env": {
+    "mocha": true,
+    "browser": true
+  },
+  "globals": {
+    "expect": true,
+    "MockSocket": true,
+    "sinon": true,
+    "Emitter": true,
+    "formatError": true
+  }
+}

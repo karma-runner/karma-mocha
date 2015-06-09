@@ -5,9 +5,7 @@
   "main": "lib/index.js",
   "sharedKarmaFiles": {
     "editorconfig": ".editorconfig",
-    "gitattributes": ".gitattributes",
-    "jshint.json": ".jshintrc",
-    "jscs.json": ".jscs.json"
+    "gitattributes": ".gitattributes"
   },
   "scripts": {
     "test": "grunt test"
@@ -24,11 +22,14 @@
   "author": "Vojta Jina <vojta.jina@gmail.com>",
   "dependencies": {},
   "devDependencies": {
+    "eslint": "^0.22.1",
+    "eslint-config-standard": "^2.0.1",
+    "eslint-plugin-react": "^2.5.0",
     "grunt": "~0.4",
     "grunt-auto-release": "~0.0.2",
     "grunt-bump": "~0.0.7",
     "grunt-contrib-jshint": "~0.10",
-    "grunt-jscs-checker": "~0.4.4",
+    "grunt-eslint": "^14.0.0",
     "grunt-karma": "~0.8.0",
     "grunt-npm": "~0.0.2",
     "karma": "~0.12.0",
@@ -37,6 +38,7 @@
     "karma-firefox-launcher": "~0.1.0",
     "karma-mocha": "~0.1.3",
     "karma-sinon": "~1.0.3",
+    "load-grunt-tasks": "^3.2.0",
     "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02"
   },
   "peerDependencies": {
