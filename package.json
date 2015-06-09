@@ -40,7 +40,6 @@
     "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02"
   },
   "peerDependencies": {
-    "karma": ">=0.12.8",
     "mocha": "*"
   },
   "license": "MIT",
