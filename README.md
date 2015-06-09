@@ -1,4 +1,9 @@
-# karma-mocha [![Build Status](https://travis-ci.org/karma-runner/karma-mocha.svg?branch=master)](https://travis-ci.org/karma-runner/karma-mocha)
+# karma-mocha
+
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg?style=flat-square)](https://github.com/karma-runner/karma-mocha)
+ [![npm version](https://img.shields.io/npm/v/karma-mocha.svg?style=flat-square)](https://www.npmjs.com/package/karma-mocha) [![npm downloads](https://img.shields.io/npm/dm/karma-mocha.svg?style=flat-square)](https://www.npmjs.com/package/karma-mocha)
+
+[![Build Status](https://img.shields.io/travis/karma-runner/karma-mocha/master.svg?style=flat-square)](https://travis-ci.org/karma-runner/karma-mocha) [![Dependency Status](https://img.shields.io/david/karma-runner/karma-mocha.svg?style=flat-square)](https://david-dm.org/karma-runner/karma-mocha) [![devDependency Status](https://img.shields.io/david/dev/karma-runner/karma-mocha.svg?style=flat-square)](https://david-dm.org/karma-runner/karma-mocha#info=devDependencies)
 
 > Adapter for the [Mocha](http://mochajs.org/) testing framework.
 

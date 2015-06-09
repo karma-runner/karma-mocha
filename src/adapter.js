@@ -1,46 +1,46 @@
-var formatError = function(error) {
-  var stack = error.stack;
-  var message = error.message;
+var formatError = function (error) {
+  var stack = error.stack
+  var message = error.message
 
   if (stack) {
     if (message && stack.indexOf(message) === -1) {
-      stack = message + '\n' + stack;
+      stack = message + '\n' + stack
     }
 
     // remove mocha stack entries
-    return stack.replace(/\n.+\/mocha\/mocha.js\?\w*\:.+(?=(\n|$))/g, '');
+    return stack.replace(/\n.+\/mocha\/mocha.js\?\w*\:.+(?=(\n|$))/g, '')
   }
 
-  return message;
-};
+  return message
+}
 
 // non-compliant version of Array::reduce.call (requires memo argument)
-var arrayReduce = function(array, reducer, memo) {
+var arrayReduce = function (array, reducer, memo) {
   for (var i = 0, len = array.length; i < len; i++) {
-    memo = reducer(memo, array[i]);
+    memo = reducer(memo, array[i])
   }
-  return memo;
-};
+  return memo
+}
 
-var createMochaReporterNode = function() {
-  var mochaRunnerNode = document.createElement('div');
-  mochaRunnerNode.setAttribute('id', 'mocha');
-  document.body.appendChild(mochaRunnerNode);
-};
+var createMochaReporterNode = function () {
+  var mochaRunnerNode = document.createElement('div')
+  mochaRunnerNode.setAttribute('id', 'mocha')
+  document.body.appendChild(mochaRunnerNode)
+}
 
-var haveMochaConfig = function(karma) {
-  return karma.config && karma.config.mocha;
-};
+var haveMochaConfig = function (karma) {
+  return karma.config && karma.config.mocha
+}
 
-var createMochaReporterConstructor = function(tc, pathname) {
+var createMochaReporterConstructor = function (tc, pathname) {
   // Set custom reporter on debug page
   if (/debug.html$/.test(pathname) && haveMochaConfig(tc) && tc.config.mocha.reporter) {
-    createMochaReporterNode();
-    return tc.config.mocha.reporter;
+    createMochaReporterNode()
+    return tc.config.mocha.reporter
   }
 
   // TODO(vojta): error formatting
-  return function(runner) {
+  return function (runner) {
     // runner events
     // - start
     // - end
@@ -51,31 +51,31 @@ var createMochaReporterConstructor = function(tc, pathname) {
     // - pass
     // - fail
 
-    runner.on('start', function() {
-      tc.info({total: runner.total});
-    });
+    runner.on('start', function () {
+      tc.info({total: runner.total})
+    })
 
-    runner.on('end', function() {
+    runner.on('end', function () {
       tc.complete({
         coverage: window.__coverage__
-      });
-    });
+      })
+    })
 
-    runner.on('test', function(test) {
-      test.$errors = [];
-    });
+    runner.on('test', function (test) {
+      test.$errors = []
+    })
 
-    runner.on('fail', function(test, error) {
-      if ('hook' === test.type) {
-        test.$errors = [formatError(error)];
-        runner.emit('test end', test);
+    runner.on('fail', function (test, error) {
+      if (test.type === 'hook') {
+        test.$errors = [formatError(error)]
+        runner.emit('test end', test)
       } else {
-        test.$errors.push(formatError(error));
+        test.$errors.push(formatError(error))
       }
-    });
+    })
 
-    runner.on('test end', function(test) {
-      var skipped = test.pending === true;
+    runner.on('test end', function (test) {
+      var skipped = test.pending === true
 
       var result = {
         id: '',
@@ -85,39 +85,42 @@ var createMochaReporterConstructor = function(tc, pathname) {
         skipped: skipped,
         time: skipped ? 0 : test.duration,
         log: test.$errors || []
-      };
-
-      var pointer = test.parent;
-      while (!pointer.root) {
-        result.suite.unshift(pointer.title);
-        pointer = pointer.parent;
       }
 
-      tc.result(result);
-    });
-  };
-};
+      var pointer = test.parent
+      while (!pointer.root) {
+        result.suite.unshift(pointer.title)
+        pointer = pointer.parent
+      }
 
-
-var createMochaStartFn = function(mocha) {
-  return function(config) {
-    var clientArguments;
-    config = config || {};
-    clientArguments = config.args;
+      tc.result(result)
+    })
+  }
+}
+/* eslint-disable no-unused-vars */
+var createMochaStartFn = function (mocha) {
+  /* eslint-enable no-unused-vars */
+  return function (config) {
+    var clientArguments
+    config = config || {}
+    clientArguments = config.args
 
     if (clientArguments) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
-        arrayReduce(clientArguments, function(isGrepArg, arg) {
-          var match;
+        arrayReduce(clientArguments, function (isGrepArg, arg) {
           if (isGrepArg) {
-            mocha.grep(new RegExp(arg));
+            mocha.grep(new RegExp(arg))
           } else if (arg === '--grep') {
-            return true;
-          } else if (match = /--grep=(.*)/.exec(arg)) {
-            mocha.grep(new RegExp(match[1]));
+            return true
+          } else {
+            var match = /--grep=(.*)/.exec(arg)
+
+            if (match) {
+              mocha.grep(new RegExp(match[1]))
+            }
           }
-          return false;
-        }, false);
+          return false
+        }, false)
       }
 
       /**
@@ -125,43 +128,44 @@ var createMochaStartFn = function(mocha) {
        * clientArguments how Array
        */
       if (clientArguments.grep) {
-        mocha.grep(clientArguments.grep);
+        mocha.grep(clientArguments.grep)
       }
     }
 
-    mocha.run();
-  };
-};
+    mocha.run()
+  }
+}
 
 // Default configuration
 var mochaConfig = {
   reporter: createMochaReporterConstructor(window.__karma__, window.location.pathname),
   ui: 'bdd',
   globals: ['__cov*']
-};
+}
 
 // Pass options from client.mocha to mocha
-var createConfigObject = function(karma) {
+/* eslint-disable no-unused-vars */
+var createConfigObject = function (karma) {
+  /* eslint-enable no-unused-vars */
+
   if (!karma.config || !karma.config.mocha) {
-    return mochaConfig;
+    return mochaConfig
   }
 
   // Copy all properties to mochaConfig
   for (var key in karma.config.mocha) {
-
     // except for reporter
     if (key === 'reporter') {
-      continue;
+      continue
     }
 
     // and merge the globals if they exist.
     if (key === 'globals') {
-      mochaConfig.globals = mochaConfig.globals.concat(karma.config.mocha[key]);
-      continue;
+      mochaConfig.globals = mochaConfig.globals.concat(karma.config.mocha[key])
+      continue
     }
 
-    mochaConfig[key] = karma.config.mocha[key];
+    mochaConfig[key] = karma.config.mocha[key]
   }
-  return mochaConfig;
-};
-
+  return mochaConfig
+}

@@ -3,355 +3,353 @@
  These tests are executed in browser.
  */
 
-describe('adapter mocha', function() {
-  var Karma = window.__karma__.constructor;
-  var sandbox;
+/* globals
+  createMochaReporterConstructor,
+  createMochaReporterNode,
+  createMochaStartFn,
+  createConfigObject,
+  mochaConfig: true
+*/
+describe('adapter mocha', function () {
+  var Karma = window.__karma__.constructor
+  var sandbox
 
-  beforeEach(function() {
-    sandbox = sinon.sandbox.create();
-  });
+  beforeEach(function () {
+    sandbox = sinon.sandbox.create()
+  })
 
-  afterEach(function() {
-    sandbox.restore();
-  });
+  afterEach(function () {
+    sandbox.restore()
+  })
 
-  describe('createMochaReporterConstructor', function(){
-    beforeEach(function() {
-      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''});
+  describe('createMochaReporterConstructor', function () {
+    beforeEach(function () {
+      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''})
       this.karma.config = {
         mocha: {
           reporter: 'html'
         }
-      };
+      }
 
-      sandbox.stub(window, 'createMochaReporterNode');
-    });
+      sandbox.stub(window, 'createMochaReporterNode')
+    })
 
-    it('should take reporter from client config on debug page', function(){
-      expect(createMochaReporterConstructor(this.karma, '/debug.html')).to.equal('html');
-    });
+    it('should take reporter from client config on debug page', function () {
+      expect(createMochaReporterConstructor(this.karma, '/debug.html')).to.equal('html')
+    })
 
-    it('should create node for mocha reporter', function(){
-      createMochaReporterConstructor(this.karma, '/debug.html');
+    it('should create node for mocha reporter', function () {
+      createMochaReporterConstructor(this.karma, '/debug.html')
 
-      expect(createMochaReporterNode.called).to.equal(true);
-    });
+      expect(createMochaReporterNode.called).to.equal(true)
+    })
 
-    it('should define console reporter if does not pass reporter in config', function(){
-      this.karma.config.mocha.reporter = null;
+    it('should define console reporter if does not pass reporter in config', function () {
+      this.karma.config.mocha.reporter = null
 
-      expect(createMochaReporterConstructor(this.karma, '/debug.html')).not.to.equal(null);
-    });
-  });
+      expect(createMochaReporterConstructor(this.karma, '/debug.html')).not.to.equal(null)
+    })
+  })
 
-  describe('reporter', function() {
-    var runner, tc;
+  describe('reporter', function () {
+    var runner, tc
 
-    beforeEach(function() {
-      tc = new Karma(new MockSocket(), null, null, null, {search: ''});
-      runner = new Emitter();
-      reporter = new (createMochaReporterConstructor(tc))(runner);
-    });
+    beforeEach(function () {
+      tc = new Karma(new MockSocket(), null, null, null, {search: ''})
+      runner = new Emitter()
+      var reporter = new (createMochaReporterConstructor(tc))(runner) // eslint-disable-line
+    })
 
+    describe('start', function () {
+      it('should report total number of specs', function () {
+        runner.total = 12
+        sandbox.spy(tc, 'info')
 
-    describe('start', function() {
+        runner.emit('start')
+        expect(tc.info.getCall(0).args).to.deep.eq([{total: 12}])
+      })
+    })
 
-      it('should report total number of specs', function() {
-        runner.total = 12;
-        sandbox.spy(tc, 'info');
+    describe('end', function () {
+      it('should report complete', function () {
+        sandbox.spy(tc, 'complete')
 
-        runner.emit('start');
-        expect(tc.info.getCall(0).args).to.deep.eq([{total: 12}]);
-      });
-    });
+        runner.emit('end')
+        expect(tc.complete.called).to.eq(true)
+      })
+    })
 
-
-    describe('end', function() {
-
-      it('should report complete', function() {
-        sandbox.spy(tc, 'complete');
-
-        runner.emit('end');
-        expect(tc.complete.called).to.eq(true);
-      });
-    });
-
-
-    describe('test end', function() {
-
-      it('should report result', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          expect(result.id).to.not.be.undefined;
-          expect(result.description).to.eq('should do something');
-          expect(result.suite instanceof Array).to.eq(true);
-          expect(result.success).to.eq(true);
-          expect(result.skipped).to.to.eql(false);
-          expect(result.log instanceof Array).to.eq(true);
-          expect(result.time).to.eq(123);
-        });
+    describe('test end', function () {
+      it('should report result', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.id).to.not.be.undefined
+          expect(result.description).to.eq('should do something')
+          expect(result.suite instanceof Array).to.eq(true)
+          expect(result.success).to.eq(true)
+          expect(result.skipped).to.to.eql(false)
+          expect(result.log instanceof Array).to.eq(true)
+          expect(result.time).to.eq(123)
+        })
 
         var mockMochaResult = {
           duration: 123,
           parent: {title: 'desc2', parent: {title: 'desc1', root: true}, root: false},
           state: 'passed',
           title: 'should do something'
-        };
+        }
 
-        runner.emit('test', mockMochaResult);
-        runner.emit('test end', mockMochaResult);
+        runner.emit('test', mockMochaResult)
+        runner.emit('test end', mockMochaResult)
 
-        expect(tc.result.called).to.eq(true);
-      });
+        expect(tc.result.called).to.eq(true)
+      })
 
-      it('should report time 0 for skipped tests', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          expect(result.skipped).to.eq(true);
-          expect(result.time).to.eq(0);
-        });
+      it('should report time 0 for skipped tests', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.skipped).to.eq(true)
+          expect(result.time).to.eq(0)
+        })
 
         var mockMochaResult = {
           pending: true,
           parent: {root: true}
-        };
+        }
 
-        runner.emit('test', mockMochaResult);
-        runner.emit('test end', mockMochaResult);
+        runner.emit('test', mockMochaResult)
+        runner.emit('test end', mockMochaResult)
 
-        expect(tc.result.called).to.eq(true);
-      });
+        expect(tc.result.called).to.eq(true)
+      })
 
-
-      it('should report failed result', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          expect(result.success).to.to.eql(false);
-          expect(result.skipped).to.to.eql(false);
-          expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.']);
-        });
+      it('should report failed result', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.success).to.to.eql(false)
+          expect(result.skipped).to.to.eql(false)
+          expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
+        })
 
         var mockMochaResult = {
           parent: {title: 'desc2', root: true},
           state: 'failed',
           title: 'should do something'
-        };
+        }
 
-        runner.emit('test', mockMochaResult);
-        runner.emit('fail', mockMochaResult, {message: 'Big trouble.'});
-        runner.emit('pass', mockMochaResult);
-        runner.emit('fail', mockMochaResult, {message: 'Another fail.'});
-        runner.emit('test end', mockMochaResult);
+        runner.emit('test', mockMochaResult)
+        runner.emit('fail', mockMochaResult, {message: 'Big trouble.'})
+        runner.emit('pass', mockMochaResult)
+        runner.emit('fail', mockMochaResult, {message: 'Another fail.'})
+        runner.emit('test end', mockMochaResult)
 
-        expect(tc.result.called).to.eq(true);
-      });
+        expect(tc.result.called).to.eq(true)
+      })
 
-
-      it('should report suites', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          expect(result.suite).to.deep.eq(['desc1', 'desc2']);
-        });
+      it('should report suites', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.suite).to.deep.eq(['desc1', 'desc2'])
+        })
 
         var mockMochaResult = {
           parent: {title: 'desc2', parent: {title: 'desc1', parent: {root: true}, root: false}, root: false},
           title: 'should do something'
-        };
+        }
 
-        runner.emit('test', mockMochaResult);
-        runner.emit('test end', mockMochaResult);
+        runner.emit('test', mockMochaResult)
+        runner.emit('test end', mockMochaResult)
 
-        expect(tc.result.called).to.eq(true);
-      });
-    });
+        expect(tc.result.called).to.eq(true)
+      })
+    })
 
-    describe('fail', function() {
-      it('should end test on hook failure', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          expect(result.success).to.to.eql(false);
-          expect(result.skipped).to.to.eql(false);
-          expect(result.log).to.deep.eq(['hook failed']);
-        });
+    describe('fail', function () {
+      it('should end test on hook failure', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.success).to.to.eql(false)
+          expect(result.skipped).to.to.eql(false)
+          expect(result.log).to.deep.eq(['hook failed'])
+        })
 
         var mockMochaHook = {
           type: 'hook',
           title: 'scenario "before each" hook',
           parent: {title: 'desc1', root: true}
-        };
+        }
 
-        runner.emit('hook', mockMochaHook);
-        runner.emit('fail', mockMochaHook, {message: 'hook failed'});
+        runner.emit('hook', mockMochaHook)
+        runner.emit('fail', mockMochaHook, {message: 'hook failed'})
 
-        expect(tc.result.called).to.eq(true);
-      });
+        expect(tc.result.called).to.eq(true)
+      })
 
-      it('should end the test only once on uncaught exceptions', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          expect(result.success).to.to.eql(false);
-          expect(result.skipped).to.to.eql(false);
-          expect(result.log).to.deep.eq(['Uncaught error.']);
-        });
+      it('should end the test only once on uncaught exceptions', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.success).to.to.eql(false)
+          expect(result.skipped).to.to.eql(false)
+          expect(result.log).to.deep.eq(['Uncaught error.'])
+        })
 
         var mockMochaResult = {
           parent: {title: 'desc2', root: true},
           state: 'failed',
           title: 'should do something'
-        };
+        }
 
-        runner.emit('test', mockMochaResult);
-        runner.emit('fail', mockMochaResult, {message: 'Uncaught error.', uncaught: true});
-        runner.emit('test end', mockMochaResult);
+        runner.emit('test', mockMochaResult)
+        runner.emit('fail', mockMochaResult, {message: 'Uncaught error.', uncaught: true})
+        runner.emit('test end', mockMochaResult)
 
-        expect(tc.result.called).to.eq(true);
-      });
+        expect(tc.result.called).to.eq(true)
+      })
 
-      it('should remove mocha stack entries', function() {
-        sandbox.stub(tc, 'result', function(result) {
-          var log = result.log[0];
-          expect(log).to.not.contain('/mocha/mocha.js');
-          expect(log).to.contain('/spec/controllers/list/formCtrlSpec.js');
-        });
+      it('should remove mocha stack entries', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          var log = result.log[0]
+          expect(log).to.not.contain('/mocha/mocha.js')
+          expect(log).to.contain('/spec/controllers/list/formCtrlSpec.js')
+        })
 
         var mockMochaResult = {
           parent: {root: true}
-        };
+        }
 
         var stack =
-            'at $httpBackend (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:1149)\n' +
-            'at sendReq (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8408)\n' +
-            'at http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8125\n' +
-            'at http://localhost:8080/base/test/client/spec/controllers/list/formCtrlSpec.js?67eaca0f801cf45a86802a262618a6cfdc6a47be:110\n' +
-            'at invoke (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:4068)\n' +
-            'at workFn (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:2194)\n' +
-            'at callFn (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4338)\n' +
-            'at http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4331\n' +
-            'at next (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4653)\n' +
-            'at http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4663\n' +
-            'at next (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4601)\n';
+        'at $httpBackend (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:1149)\n' +
+          'at sendReq (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8408)\n' +
+          'at http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8125\n' +
+          'at http://localhost:8080/base/test/client/spec/controllers/list/formCtrlSpec.js?67eaca0f801cf45a86802a262618a6cfdc6a47be:110\n' +
+          'at invoke (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:4068)\n' +
+          'at workFn (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:2194)\n' +
+          'at callFn (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4338)\n' +
+          'at http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4331\n' +
+          'at next (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4653)\n' +
+          'at http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4663\n' +
+          'at next (http://localhost:8080/base/node_modules/mocha/mocha.js?529c1ea3966a13c21efca5afe9a2317dafcd8abc:4601)\n'
 
-        runner.emit('test', mockMochaResult);
-        runner.emit('fail', mockMochaResult, {message: 'Another fail.', stack: stack});
-        runner.emit('test end', mockMochaResult);
+        runner.emit('test', mockMochaResult)
+        runner.emit('fail', mockMochaResult, {message: 'Another fail.', stack: stack})
+        runner.emit('test end', mockMochaResult)
 
-        expect(tc.result.called).to.eq(true);
-      });
-    });
-  });
+        expect(tc.result.called).to.eq(true)
+      })
+    })
+  })
 
-  describe('createMochaStartFn', function() {
-    beforeEach(function() {
+  describe('createMochaStartFn', function () {
+    beforeEach(function () {
       this.mockMocha = {
-        grep: function(){},
-        run: function(){}
-      };
-    });
+        grep: function () {},
+        run: function () {}
+      }
+    })
 
-    it('should pass grep argument to mocha', function() {
-      sandbox.spy(this.mockMocha, 'grep');
+    it('should pass grep argument to mocha', function () {
+      sandbox.spy(this.mockMocha, 'grep')
 
       createMochaStartFn(this.mockMocha)({
         args: ['--grep', 'test test']
-      });
+      })
 
-      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/]);
-    });
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/])
+    })
 
-    it('should pass grep argument to mocha if we called the run with --grep=xxx', function() {
-      sandbox.spy(this.mockMocha, 'grep');
+    it('should pass grep argument to mocha if we called the run with --grep=xxx', function () {
+      sandbox.spy(this.mockMocha, 'grep')
 
       createMochaStartFn(this.mockMocha)({
         args: ['--grep=test test']
-      });
+      })
 
-      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/]);
-    });
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/])
+    })
 
-    it('should pass grep argument to mocha if config.args contains property grep', function(){
-      sandbox.spy(this.mockMocha, 'grep');
+    it('should pass grep argument to mocha if config.args contains property grep', function () {
+      sandbox.spy(this.mockMocha, 'grep')
 
       createMochaStartFn(this.mockMocha)({
-          args: {
-              grep: 'test'
-          }
-      });
+        args: {
+          grep: 'test'
+        }
+      })
 
-      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test']);
-    });
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq(['test'])
+    })
 
-    it('should not require client arguments', function() {
-      var that = this;
+    it('should not require client arguments', function () {
+      var that = this
 
-      expect(function(){
-        createMochaStartFn(that.mockMocha)({});
-      }).to.not.throw();
-    });
-  });
+      expect(function () {
+        createMochaStartFn(that.mockMocha)({})
+      }).to.not.throw()
+    })
+  })
 
-  describe('createConfigObject', function() {
-    beforeEach(function() {
-      this.originalMochaConfig = mochaConfig;
+  describe('createConfigObject', function () {
+    beforeEach(function () {
+      this.originalMochaConfig = mochaConfig
 
       mochaConfig = {
         ui: 'bdd',
         globals: ['__cov']
-      };
+      }
 
-      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''});
-      this.karma.config = {};
-    });
+      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''})
+      this.karma.config = {}
+    })
 
-    afterEach(function() {
-      mochaConfig = this.originalMochaConfig;
-    });
+    afterEach(function () {
+      mochaConfig = this.originalMochaConfig
+    })
 
-    it('should return default config if karma does not define client config', function() {
-      this.karma.config = null;
+    it('should return default config if karma does not define client config', function () {
+      this.karma.config = null
 
-      expect(createConfigObject(this.karma)).to.eq(mochaConfig);
-    });
+      expect(createConfigObject(this.karma)).to.eq(mochaConfig)
+    })
 
-    it('should return default config if the client config havent properties mocha', function() {
-      expect(createConfigObject(this.karma)).to.eq(mochaConfig);
-    });
+    it('should return default config if the client config havent properties mocha', function () {
+      expect(createConfigObject(this.karma)).to.eq(mochaConfig)
+    })
 
-    it('should pass client.mocha options to mocha config', function() {
+    it('should pass client.mocha options to mocha config', function () {
       this.karma.config.mocha = {
         slow: 10
-      };
+      }
 
-      expect(createConfigObject(this.karma).slow).to.eq(10);
-    });
+      expect(createConfigObject(this.karma).slow).to.eq(10)
+    })
 
-    it('should rewrite ui options from default config', function() {
+    it('should rewrite ui options from default config', function () {
       this.karma.config.mocha = {
         ui: 'tdd'
-      };
+      }
 
-      expect(createConfigObject(this.karma).ui).to.eq('tdd');
-    });
+      expect(createConfigObject(this.karma).ui).to.eq('tdd')
+    })
 
-    it('should ignore propertie reporter from client config', function() {
+    it('should ignore propertie reporter from client config', function () {
       this.karma.config.mocha = {
         reporter: 'test'
-      };
+      }
 
-      expect(createConfigObject(this.karma).reporter).not.to.eq('test');
-    });
+      expect(createConfigObject(this.karma).reporter).not.to.eq('test')
+    })
 
-    it('should merge the globals from client config if they exist', function() {
+    it('should merge the globals from client config if they exist', function () {
       this.karma.config.mocha = {
         globals: ['test']
-      };
+      }
 
-      expect(createConfigObject(this.karma).globals).to.deep.eq(['__cov', 'test']);
-    });
-  });
+      expect(createConfigObject(this.karma).globals).to.deep.eq(['__cov', 'test'])
+    })
+  })
 
   describe('formatError', function () {
-
     it('should properly format exceptions that contains \n in their message', function () {
-      var errLines = formatError(new Error('foo\nbar')).split('\n');
-      expect(errLines[0]).to.contain('foo');
-      expect(errLines[1]).to.equal('bar');
-      expect(errLines[2]).to.not.contain('foo');
-      expect(errLines[3]).to.not.contain('bar');
-    });
+      var errLines = formatError(new Error('foo\nbar')).split('\n')
+      expect(errLines[0]).to.contain('foo')
+      expect(errLines[1]).to.equal('bar')
+      expect(errLines[2]).to.not.contain('foo')
+      expect(errLines[3]).to.not.contain('bar')
+    })
 
-  });
-});
+  })
+})
