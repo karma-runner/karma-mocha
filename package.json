@@ -47,19 +47,20 @@
   "license": "MIT",
   "contributors": [
     "Maksim Ryzhikov <rv.maksim@gmail.com>",
-    "Jordan Klassen <jordan@vidigami.com>",
-    "Friedel Ziegelmayer <friedel.ziegelmayer@gmail.com>",
-    "Martin Hansen <martin@martinhansen.no>",
-    "Dave Geddes <davidcgeddes@gmail.com>",
-    "Lukasz Bandzarewicz <lucassus@gmail.com>",
-    "Pawel Kozlowski <pkozlowski.opensource@gmail.com>",
-    "Aymeric Beaumet <aymeric@beaumet.me>",
-    "Ciro S. Costa <ciro.costa@usp.br>",
     "Friedel Ziegelmayer <dignifiedquire@gmail.com>",
+    "Jordan Klassen <jordan@vidigami.com>",
+    "Martin Hansen <martin@martinhansen.no>",
+    "Pawel Kozlowski <pkozlowski.opensource@gmail.com>",
+    "Lukasz Bandzarewicz <lucassus@gmail.com>",
+    "Dave Geddes <davidcgeddes@gmail.com>",
+    "Karolis Narkevicius <karolis.n@gmail.com>",
+    "Ciro S. Costa <ciro.costa@usp.br>",
     "JONATHAN PARK <jonathan@silvenstudios.com>",
+    "Jason Divock <jdivock@gmail.com>",
     "Jeff Jagoda <jeffrey.jagoda@gmail.com>",
     "Jonathan Knapp <jon@coffeeandcode.com>",
-    "Karolis Narkevicius <karolis.n@gmail.com>",
-    "Sahat Yalkabov <sakhat@gmail.com>"
+    "Aymeric Beaumet <aymeric@beaumet.me>",
+    "Sahat Yalkabov <sakhat@gmail.com>",
+    "Tim Macfarlane <timmacfarlane@gmail.com>"
   ]
 }
