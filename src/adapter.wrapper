@@ -1,8 +1,7 @@
-(function(window) {
+;(function (window) {
 
 %CONTENT%
 
-
-window.__karma__.start = createMochaStartFn(window.mocha)
-window.mocha.setup(createConfigObject(window.__karma__))
-})(window);
+  window.__karma__.start = createMochaStartFn(window.mocha)
+  window.mocha.setup(createConfigObject(window.__karma__))
+})(window)

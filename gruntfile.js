@@ -13,6 +13,7 @@ module.exports = function (grunt) {
       target: [
         '<%= files.adapter %>',
         'gruntfile.js',
+        'lib/index.js',
         'tasks/*.js',
         'test/**/*.js'
       ]
