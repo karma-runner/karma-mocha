@@ -78,14 +78,17 @@ module.exports = function(config) {
   config.set({
     ...
     client: {
-      args: ['--grep', '<pattern>'],
+      mocha:{
+        grep: '<pattern>',
+        ...
+      }
       ...
     }
   });
 };
 ```
 
-`--grep` argument pass directly to mocha
+The `grep` argument is passed directly to mocha.
 
 
 ----
