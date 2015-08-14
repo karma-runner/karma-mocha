@@ -35,6 +35,10 @@ module.exports = function(config) {
 
     files: [
       '*.js'
+    ],
+    
+    plugins: [
+      'karma-mocha'
     ]
   });
 };
@@ -58,7 +62,11 @@ module.exports = function(config) {
         reporter: 'html', // change Karma's debug.html to the mocha web reporter
         ui: 'tdd'
       }
-    }
+    },
+    
+    plugins: [
+      'karma-mocha'
+    ]
   });
 };
 ```
