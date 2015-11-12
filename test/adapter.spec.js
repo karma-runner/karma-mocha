@@ -4,12 +4,21 @@
  */
 
 /* globals
-  createMochaReporterConstructor,
-  createMochaReporterNode,
-  createMochaStartFn,
-  createConfigObject,
-  mochaConfig: true
-*/
+ createMochaReporterConstructor,
+ createMochaReporterNode,
+ createMochaStartFn,
+ createConfigObject,
+ mochaConfig: true,
+ formatError: true,
+ MockSocket: true,
+ Emitter: true,
+ sinon: true,
+ expect: true,
+ describe: true,
+ beforeEach: true,
+ afterEach: true,
+ it: true
+ */
 describe('adapter mocha', function () {
   var Karma = window.__karma__.constructor
   var sandbox
@@ -212,7 +221,7 @@ describe('adapter mocha', function () {
         }
 
         var stack =
-        'at $httpBackend (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:1149)\n' +
+          'at $httpBackend (http://localhost:8080/base/app/bower_components/angular-mocks/angular-mocks.js?506e0a37bcd764ec63da3fd7005bf56592b3df32:1149)\n' +
           'at sendReq (http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8408)\n' +
           'at http://localhost:8080/base/app/bower_components/angular/angular.js?7deca05396a4331b08f812e4962ef9df1d9de0b5:8125\n' +
           'at http://localhost:8080/base/test/client/spec/controllers/list/formCtrlSpec.js?67eaca0f801cf45a86802a262618a6cfdc6a47be:110\n' +
@@ -236,8 +245,10 @@ describe('adapter mocha', function () {
   describe('createMochaStartFn', function () {
     beforeEach(function () {
       this.mockMocha = {
-        grep: function () {},
-        run: function () {}
+        grep: function () {
+        },
+        run: function () {
+        }
       }
     })
 
@@ -348,7 +359,6 @@ describe('adapter mocha', function () {
       expect(errLines[0]).to.contain('foo')
       expect(errLines[1]).to.equal('bar')
       expect(errLines[2]).to.not.contain('foo')
-      expect(errLines[3]).to.not.contain('bar')
     })
 
   })
