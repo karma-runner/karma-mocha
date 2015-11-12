@@ -1,4 +1,4 @@
-module.exports = function(config) {
+module.exports = function (config) {
   config.set({
     frameworks: ['mocha', 'chai', 'sinon'],
 
@@ -10,5 +10,5 @@ module.exports = function(config) {
     browsers: process.env.TRAVIS ? ['Firefox'] : ['Chrome'],
 
     autoWatch: true
-  });
-};
+  })
+}
