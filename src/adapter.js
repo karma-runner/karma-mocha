@@ -50,6 +50,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
     // - test end
     // - pass
     // - fail
+    // - pending
 
     runner.on('start', function () {
       tc.info({total: runner.total})
@@ -63,6 +64,10 @@ var createMochaReporterConstructor = function (tc, pathname) {
 
     runner.on('test', function (test) {
       test.$errors = []
+    })
+
+    runner.on('pending', function (test) {
+      test.pending = true
     })
 
     runner.on('fail', function (test, error) {
