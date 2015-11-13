@@ -113,6 +113,21 @@ describe('adapter mocha', function () {
         expect(tc.result.called).to.eq(true)
       })
 
+      it('should report skipped result', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.skipped).to.eq(true)
+        })
+
+        var mockMochaResult = {
+          parent: {root: true}
+        }
+
+        runner.emit('pending', mockMochaResult)
+        runner.emit('test end', mockMochaResult)
+
+        expect(tc.result.called).to.eq(true)
+      })
+
       it('should report time 0 for skipped tests', function () {
         sandbox.stub(tc, 'result', function (result) {
           expect(result.skipped).to.eq(true)
