@@ -14,6 +14,29 @@ var formatError = function (error) {
   return message
 }
 
+var processAssertionError = function (error_) {
+
+  var error
+
+  if (window.Mocha && error_.hasOwnProperty('showDiff')) {
+
+    error = {
+      name: error_.name,
+      message: error_.message,
+      showDiff: error_.showDiff
+    }
+
+    if (error.showDiff) {
+      error.actual = window.Mocha.utils.stringify(error_.actual)
+      error.expected = window.Mocha.utils.stringify(error_.expected)
+    }
+
+  }
+
+  return error
+
+}
+
 // non-compliant version of Array::reduce.call (requires memo argument)
 var arrayReduce = function (array, reducer, memo) {
   for (var i = 0, len = array.length; i < len; i++) {
@@ -64,6 +87,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
 
     runner.on('test', function (test) {
       test.$errors = []
+      test.$assertionErrors = []
     })
 
     runner.on('pending', function (test) {
@@ -71,11 +95,17 @@ var createMochaReporterConstructor = function (tc, pathname) {
     })
 
     runner.on('fail', function (test, error) {
+
+      var simpleError = formatError(error)
+      var assertionError = processAssertionError(error)
+
       if (test.type === 'hook') {
-        test.$errors = [formatError(error)]
+        test.$errors = [simpleError]
+        test.$assertionErrors = assertionError ? [assertionError] : []
         runner.emit('test end', test)
       } else {
-        test.$errors.push(formatError(error))
+        test.$errors.push(simpleError)
+        if (assertionError) test.$assertionErrors.push(assertionError)
       }
     })
 
@@ -89,7 +119,8 @@ var createMochaReporterConstructor = function (tc, pathname) {
         success: test.state === 'passed',
         skipped: skipped,
         time: skipped ? 0 : test.duration,
-        log: test.$errors || []
+        log: test.$errors || [],
+        assertionErrors: test.$assertionErrors || []
       }
 
       var pointer = test.parent

@@ -10,6 +10,7 @@
  createConfigObject,
  mochaConfig: true,
  formatError: true,
+ processAssertionError: true,
  MockSocket: true,
  Emitter: true,
  sinon: true,
@@ -97,6 +98,7 @@ describe('adapter mocha', function () {
           expect(result.success).to.eq(true)
           expect(result.skipped).to.to.eql(false)
           expect(result.log instanceof Array).to.eq(true)
+          expect(result.assertionErrors instanceof Array).to.eq(true)
           expect(result.time).to.eq(123)
         })
 
@@ -150,6 +152,7 @@ describe('adapter mocha', function () {
           expect(result.success).to.to.eql(false)
           expect(result.skipped).to.to.eql(false)
           expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
+          expect(result.assertionErrors).to.be.empty
         })
 
         var mockMochaResult = {
@@ -161,6 +164,36 @@ describe('adapter mocha', function () {
         runner.emit('test', mockMochaResult)
         runner.emit('fail', mockMochaResult, {message: 'Big trouble.'})
         runner.emit('pass', mockMochaResult)
+        runner.emit('fail', mockMochaResult, {message: 'Another fail.'})
+        runner.emit('test end', mockMochaResult)
+
+        expect(tc.result.called).to.eq(true)
+      })
+
+      it('should report failed mocha result', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
+          expect(result.assertionErrors).to.deep.eq([{
+            name: 'AssertionError',
+            message: 'Big trouble.',
+            showDiff: false
+          }])
+        })
+
+        var mockMochaResult = {
+          parent: {title: 'desc2', root: true},
+          state: 'failed',
+          title: 'should do something'
+        }
+
+        runner.emit('test', mockMochaResult)
+        runner.emit('fail', mockMochaResult, {
+          name: 'AssertionError',
+          message: 'Big trouble.',
+          showDiff: false,
+          actual: 1,
+          expected: 2
+        })
         runner.emit('fail', mockMochaResult, {message: 'Another fail.'})
         runner.emit('test end', mockMochaResult)
 
@@ -377,4 +410,53 @@ describe('adapter mocha', function () {
     })
 
   })
+
+  describe('processAssertionError', function () {
+    it('should create object from mocha error', function () {
+
+      var err = new Error()
+      err.name = 'AssertionError'
+      err.message = 'expected \'something\' to deeply equal \'something else\''
+      err.showDiff = true
+      err.actual = {baz: 'baz', foo: null, bar: function () {}}
+      err.expected = {baz: 42, foo: undefined}
+
+      var error = processAssertionError(err)
+
+      expect(Object.keys(error)).to.be.eql(['name', 'message', 'showDiff', 'actual', 'expected'])
+      expect(error.name).to.equal('AssertionError')
+      expect(error.message).to.equal('expected \'something\' to deeply equal \'something else\'')
+      expect(error.showDiff).to.be.true
+      expect(error.actual).to.equal('{\n  "bar": [Function]\n  "baz": "baz"\n  "foo": [null]\n}')
+      expect(error.expected).to.equal('{\n  "baz": 42\n  "foo": [undefined]\n}')
+    })
+
+    it('should not create object from simple error', function () {
+
+      var err = new Error('Something wrong')
+
+      var error = processAssertionError(err)
+
+      expect(error).to.be.undefined
+    })
+
+    it('should not pass actual and expected if showDiff is off', function () {
+
+      var err = new Error()
+      err.message = 'expected \'something\' to deeply equal \'something else\''
+      err.showDiff = false
+      err.actual = {baz: 'baz', foo: null, bar: function () {}}
+      err.expected = {baz: 42, foo: undefined}
+
+      var error = processAssertionError(err)
+
+      expect(Object.keys(error)).to.be.eql(['name', 'message', 'showDiff'])
+      expect(error.name).to.equal('Error')
+      expect(error.message).to.equal('expected \'something\' to deeply equal \'something else\'')
+      expect(error.showDiff).to.be.false
+      expect(error).to.not.have.property('actual')
+      expect(error).to.not.have.property('expected')
+    })
+  })
+
 })
