@@ -90,6 +90,25 @@ module.exports = function(config) {
 
 The `grep` argument is passed directly to mocha.
 
+## Internals
+
+On the end of each test `karma-mocha` passes to `karma` result object with fields:
+
+* `description` Test title.
+* `suite` List of titles of test suites.
+* `success` True if test is succeed, false otherwise.
+* `skipped` True if test is skipped.
+* `time` Test duration.
+* `log` List of errors.
+* `assertionErrors` List of additional error info: 
+    * `name` Error name.
+    * `message` Error message.
+    * `actual` Actual data in assertion, serialized to string.
+    * `expected` Expected data in assertion, serialized to string.
+    * `showDiff` True if it is configured by assertion to show diff.
+
+This object will be passed to test reporter.
+
 
 ----
 
