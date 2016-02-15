@@ -408,12 +408,10 @@ describe('adapter mocha', function () {
       expect(errLines[1]).to.equal('bar')
       expect(errLines[2]).to.not.contain('foo')
     })
-
   })
 
   describe('processAssertionError', function () {
     it('should create object from mocha error', function () {
-
       var err = new Error()
       err.name = 'AssertionError'
       err.message = 'expected \'something\' to deeply equal \'something else\''
@@ -432,7 +430,6 @@ describe('adapter mocha', function () {
     })
 
     it('should not create object from simple error', function () {
-
       var err = new Error('Something wrong')
 
       var error = processAssertionError(err)
@@ -441,7 +438,6 @@ describe('adapter mocha', function () {
     })
 
     it('should not pass actual and expected if showDiff is off', function () {
-
       var err = new Error()
       err.message = 'expected \'something\' to deeply equal \'something else\''
       err.showDiff = false
@@ -458,5 +454,4 @@ describe('adapter mocha', function () {
       expect(error).to.not.have.property('expected')
     })
   })
-
 })

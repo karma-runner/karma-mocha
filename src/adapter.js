@@ -15,11 +15,9 @@ var formatError = function (error) {
 }
 
 var processAssertionError = function (error_) {
-
   var error
 
   if (window.Mocha && error_.hasOwnProperty('showDiff')) {
-
     error = {
       name: error_.name,
       message: error_.message,
@@ -30,11 +28,9 @@ var processAssertionError = function (error_) {
       error.actual = window.Mocha.utils.stringify(error_.actual)
       error.expected = window.Mocha.utils.stringify(error_.expected)
     }
-
   }
 
   return error
-
 }
 
 // non-compliant version of Array::reduce.call (requires memo argument)
@@ -95,7 +91,6 @@ var createMochaReporterConstructor = function (tc, pathname) {
     })
 
     runner.on('fail', function (test, error) {
-
       var simpleError = formatError(error)
       var assertionError = processAssertionError(error)
 
