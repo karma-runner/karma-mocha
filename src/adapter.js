@@ -52,8 +52,10 @@ var haveMochaConfig = function (karma) {
 }
 
 var createMochaReporterConstructor = function (tc, pathname) {
+  var isDebugPage = /debug.html$/.test(pathname)
+
   // Set custom reporter on debug page
-  if (/debug.html$/.test(pathname) && haveMochaConfig(tc) && tc.config.mocha.reporter) {
+  if (isDebugPage && haveMochaConfig(tc) && tc.config.mocha.reporter) {
     createMochaReporterNode()
     return tc.config.mocha.reporter
   }
@@ -95,11 +97,11 @@ var createMochaReporterConstructor = function (tc, pathname) {
       var assertionError = processAssertionError(error)
 
       if (test.type === 'hook') {
-        test.$errors = [simpleError]
+        test.$errors = isDebugPage ? [error] : [simpleError]
         test.$assertionErrors = assertionError ? [assertionError] : []
         runner.emit('test end', test)
       } else {
-        test.$errors.push(simpleError)
+        test.$errors.push(isDebugPage ? error : simpleError)
         if (assertionError) test.$assertionErrors.push(assertionError)
       }
     })
