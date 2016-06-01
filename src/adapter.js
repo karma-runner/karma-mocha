@@ -14,23 +14,10 @@ var formatError = function (error) {
   return message
 }
 
-var processAssertionError = function (error_) {
-  var error
-
-  if (window.Mocha && error_.hasOwnProperty('showDiff')) {
-    error = {
-      name: error_.name,
-      message: error_.message,
-      showDiff: error_.showDiff
-    }
-
-    if (error.showDiff) {
-      error.actual = window.Mocha.utils.stringify(error_.actual)
-      error.expected = window.Mocha.utils.stringify(error_.expected)
-    }
+var processAssertionError = function (error) {
+  if (window.Mocha && error.hasOwnProperty('showDiff')) {
+    return error
   }
-
-  return error
 }
 
 // non-compliant version of Array::reduce.call (requires memo argument)
