@@ -8,6 +8,7 @@
     "MockSocket": true,
     "sinon": true,
     "Emitter": true,
-    "formatError": true
+    "formatError": true,
+    "run": true
   }
 }

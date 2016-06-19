@@ -3,5 +3,5 @@
 %CONTENT%
 
   window.__karma__.start = createMochaStartFn(window.mocha)
-  window.mocha.setup(createConfigObject(window.__karma__))
+  window.mocha.setup(createConfigObject(window.__karma__, window.__mochaOptsConfig))
 })(window)

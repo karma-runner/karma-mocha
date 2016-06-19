@@ -130,6 +130,9 @@ var createMochaReporterConstructor = function (tc, pathname) {
     })
   }
 }
+
+var mochaOptions = {}
+
 /* eslint-disable no-unused-vars */
 var createMochaStartFn = function (mocha) {
   /* eslint-enable no-unused-vars */
@@ -156,6 +159,12 @@ var createMochaStartFn = function (mocha) {
         }, false)
       }
 
+      for (var option in mochaOptions) {
+        if (mocha[option]) {
+          mocha[option](mochaOptions[option])
+        }
+      }
+
       /**
        * TODO(maksimrv): remove when karma-grunt plugin will pass
        * clientArguments how Array
@@ -176,9 +185,30 @@ var mochaConfig = {
   globals: ['__cov*']
 }
 
+var parseOptsConfig = function (mochaOptsConfig) {
+  for (var key in mochaOptsConfig) {
+    // don't authorize ui override
+    if (key === 'ui' || key === 'reporter') {
+      continue
+    }
+
+    // and merge the globals if they exist.
+    if (key === 'globals') {
+      mochaConfig.globals = mochaConfig.globals.concat(mochaOptsConfig[key])
+      continue
+    }
+
+    if (key === 'timeout') {
+      mochaConfig.timeout = mochaOptsConfig[key]
+      continue
+    }
+
+    mochaOptions[key] = mochaOptsConfig[key]
+  }
+}
 // Pass options from client.mocha to mocha
 /* eslint-disable no-unused-vars */
-var createConfigObject = function (karma) {
+var createConfigObject = function (karma, mochaOptsConfig) {
   /* eslint-enable no-unused-vars */
 
   if (!karma.config || !karma.config.mocha) {
@@ -189,6 +219,11 @@ var createConfigObject = function (karma) {
   for (var key in karma.config.mocha) {
     // except for reporter
     if (key === 'reporter') {
+      continue
+    }
+
+    if (key === 'opts') {
+      parseOptsConfig(mochaOptsConfig)
       continue
     }
 
