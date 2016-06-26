@@ -9,6 +9,14 @@ module.exports = function (config) {
 
     browsers: process.env.TRAVIS ? ['Firefox'] : ['Chrome'],
 
-    autoWatch: true
+    autoWatch: true,
+
+    plugins: [
+      require.resolve('./'),
+      'karma-chai',
+      'karma-sinon',
+      'karma-firefox-launcher',
+      'karma-chrome-launcher'
+    ]
   })
 }
