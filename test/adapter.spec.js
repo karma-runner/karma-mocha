@@ -392,7 +392,7 @@ describe('adapter mocha', function () {
       expect(createConfigObject(this.karma).reporter).not.to.eq('test')
     })
 
-    it('should ignore propertie require from client config', function () {
+    it('should ignore property require from client config', function () {
       this.karma.config.mocha = {
         require: 'test'
       }
