@@ -217,8 +217,8 @@ var createConfigObject = function (karma, mochaOptsConfig) {
 
   // Copy all properties to mochaConfig
   for (var key in karma.config.mocha) {
-    // except for reporter
-    if (key === 'reporter') {
+    // except for reporter or require
+    if (['reporter', 'require'].indexOf(key) >= 0) {
       continue
     }
 

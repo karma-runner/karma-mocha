@@ -417,6 +417,14 @@ describe('adapter mocha', function () {
       expect(createConfigObject(this.karma).reporter).not.to.eq('test')
     })
 
+    it('should ignore property require from client config', function () {
+      this.karma.config.mocha = {
+        require: 'test'
+      }
+
+      expect(createConfigObject(this.karma).require).not.to.eq('test')
+    })
+
     it('should merge the globals from client config if they exist', function () {
       this.karma.config.mocha = {
         globals: ['test']

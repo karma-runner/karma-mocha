@@ -15,6 +15,14 @@ module.exports = function (config) {
       mocha: {
         opts: './test/mocha.opts'
       }
-    }
+    },
+    
+    plugins: [
+      require.resolve('./'),
+      'karma-chai',
+      'karma-sinon',
+      'karma-firefox-launcher',
+      'karma-chrome-launcher'
+    ]
   })
 }
