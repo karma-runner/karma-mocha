@@ -106,6 +106,8 @@ On the end of each test `karma-mocha` passes to `karma` result object with field
 * `skipped` True if test is skipped.
 * `time` Test duration.
 * `log` List of errors.
+* `startTime` Milliseconds since epoch that the test started
+* `endTime` Milliseconds since epoch that the test ended
 * `assertionErrors` List of additional error info: 
     * `name` Error name.
     * `message` Error message.
@@ -115,6 +117,7 @@ On the end of each test `karma-mocha` passes to `karma` result object with field
 
 This object will be passed to test reporter.
 
+NB. the start and end times are added by the adapter whereas the duration is calculated by Mocha - as such they probably will not match arithmetically. Ie. `endTime - startTime !== duration`. These fields have been added so that timestamped reports can be matched up with other timestamped reports from the target device (eg. memory profiling data collected outside the browser)
 
 ----
 
