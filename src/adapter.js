@@ -1,9 +1,31 @@
+// backwards compatible version of (Array|String).prototype.includes
+var includes = function (collection, element, startIndex) {
+  if (!collection || !collection.length) {
+    return false
+  }
+
+  // strings support indexOf already
+  if (typeof collection === 'string') {
+    return collection.indexOf(element, startIndex) !== -1
+  }
+
+  if (Array.prototype.indexOf) {
+    return collection.indexOf(element, startIndex) !== -1
+  }
+
+  for (var i = startIndex || 0, len = collection.length; i < len; i++) {
+    if (collection[i] === element) {
+      return true
+    }
+  }
+}
+
 var formatError = function (error) {
   var stack = error.stack
   var message = error.message
 
   if (stack) {
-    if (message && stack.indexOf(message) === -1) {
+    if (message && !includes(stack, message)) {
       stack = message + '\n' + stack
     }
 
@@ -188,7 +210,7 @@ var createConfigObject = function (karma) {
   // Copy all properties to mochaConfig
   for (var key in karma.config.mocha) {
     // except for reporter or require
-    if (['reporter', 'require'].indexOf(key) >= 0) {
+    if (includes(['reporter', 'require'], key)) {
       continue
     }
 
