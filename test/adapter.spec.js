@@ -34,7 +34,7 @@ describe('adapter mocha', function () {
 
   describe('createMochaReporterConstructor', function () {
     beforeEach(function () {
-      this.karma = new Karma(new MockSocket(), null, null, null, {search: ''})
+      this.karma = new Karma(function (method, args) { })
       this.karma.config = {
         mocha: {
           reporter: 'html'
@@ -65,7 +65,7 @@ describe('adapter mocha', function () {
     var runner, tc
 
     beforeEach(function () {
-      tc = new Karma(new MockSocket(), null, null, null, {search: ''})
+      tc = new Karma(function (method, args) { })
       runner = new Emitter()
       var reporter = new (createMochaReporterConstructor(tc))(runner) // eslint-disable-line
     })
