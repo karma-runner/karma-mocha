@@ -106,6 +106,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
     })
 
     runner.on('test', function (test) {
+      test.$startTime = Date.now()
       test.$errors = []
       test.$assertionErrors = []
     })
@@ -139,7 +140,9 @@ var createMochaReporterConstructor = function (tc, pathname) {
         skipped: skipped,
         time: skipped ? 0 : test.duration,
         log: test.$errors || [],
-        assertionErrors: test.$assertionErrors || []
+        assertionErrors: test.$assertionErrors || [],
+        startTime: test.$startTime,
+        endTime: Date.now()
       }
 
       var pointer = test.parent

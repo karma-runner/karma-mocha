@@ -91,7 +91,11 @@ describe('adapter mocha', function () {
 
     describe('test end', function () {
       it('should report result', function () {
+        var beforeStartTime = Date.now()
+        var DURATION = 200
+
         sandbox.stub(tc, 'result', function (result) {
+          var afterEndTime = Date.now()
           expect(result.id).to.not.be.undefined
           expect(result.description).to.eq('should do something')
           expect(result.suite instanceof Array).to.eq(true)
@@ -99,17 +103,23 @@ describe('adapter mocha', function () {
           expect(result.skipped).to.to.eql(false)
           expect(result.log instanceof Array).to.eq(true)
           expect(result.assertionErrors instanceof Array).to.eq(true)
-          expect(result.time).to.eq(123)
+          expect(result.startTime).to.be.at.least(beforeStartTime)
+          expect(result.endTime - result.startTime).to.be.at.least(DURATION)
+          expect(result.endTime).to.be.at.most(afterEndTime)
+          expect(result.time).to.eq(DURATION)
         })
 
         var mockMochaResult = {
-          duration: 123,
+          duration: DURATION,
           parent: {title: 'desc2', parent: {title: 'desc1', root: true}, root: false},
           state: 'passed',
           title: 'should do something'
         }
 
         runner.emit('test', mockMochaResult)
+        // wait at least 200ms to get different start and end times
+        var afterStartTime = Date.now()
+        while (Date.now() - afterStartTime < DURATION) {}
         runner.emit('test end', mockMochaResult)
 
         expect(tc.result.called).to.eq(true)
