@@ -84,8 +84,8 @@ module.exports = function(config) {
   config.set({
     ...
     client: {
-      mocha:{
-        grep: '<pattern>',
+      mocha: {
+        grep: '<pattern>', // passed directly to mocha
         ...
       }
       ...
@@ -94,7 +94,22 @@ module.exports = function(config) {
 };
 ```
 
-The `grep` argument is passed directly to mocha.
+If you want to expose test properties specific to `mocha`, you can use the `expose` option:
+
+```js
+module.exports = function(config) {
+  config.set({
+    ...
+    client: {
+      mocha: {
+        expose: ['body'] // This will be exposed in a reporter as `result.mocha.body`
+        ...
+      }
+      ...
+    }
+  });
+};
+```
 
 ## Internals
 
@@ -114,6 +129,7 @@ On the end of each test `karma-mocha` passes to `karma` result object with field
     * `actual` Actual data in assertion, serialized to string.
     * `expected` Expected data in assertion, serialized to string.
     * `showDiff` True if it is configured by assertion to show diff.
+* `mocha` An optional object listed if you use the `expose` option
 
 This object will be passed to test reporter.
 

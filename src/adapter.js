@@ -151,6 +151,15 @@ var createMochaReporterConstructor = function (tc, pathname) {
         pointer = pointer.parent
       }
 
+      if (haveMochaConfig(tc) && tc.config.mocha.expose && tc.config.mocha.expose.forEach) {
+        result.mocha = {}
+        tc.config.mocha.expose.forEach(function (prop) {
+          if (test.hasOwnProperty(prop)) {
+            result.mocha[prop] = test[prop]
+          }
+        })
+      }
+
       tc.result(result)
     })
   }
@@ -212,8 +221,8 @@ var createConfigObject = function (karma) {
 
   // Copy all properties to mochaConfig
   for (var key in karma.config.mocha) {
-    // except for reporter or require
-    if (includes(['reporter', 'require'], key)) {
+    // except for reporter, require, or expose
+    if (includes(['reporter', 'require', 'expose'], key)) {
       continue
     }
 

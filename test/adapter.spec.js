@@ -225,6 +225,47 @@ describe('adapter mocha', function () {
 
         expect(tc.result.called).to.eq(true)
       })
+
+      it('should report mocha properties through the `expose` option', function () {
+        tc.config = {
+          mocha: {
+            expose: ['body', 'hello']
+          }
+        }
+
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.mocha.body).to.eq('function(){ expect(false).to.be(true) }')
+          expect(result.mocha.hello).to.eq('world')
+        })
+
+        var mockMochaResult = {
+          parent: {title: 'desc2', root: true},
+          title: 'should do something',
+          body: 'function(){ expect(false).to.be(true) }',
+          hello: 'world'
+        }
+
+        runner.emit('test end', mockMochaResult)
+
+        expect(tc.result.called).to.eq(true)
+      })
+
+      it('should not report mocha properties if `expose` is not configured', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.mocha).to.not.exist
+        })
+
+        var mockMochaResult = {
+          parent: {title: 'desc2', root: true},
+          title: 'should do something',
+          body: 'function(){ expect(false).to.be(true) }',
+          hello: 'world'
+        }
+
+        runner.emit('test end', mockMochaResult)
+
+        expect(tc.result.called).to.eq(true)
+      })
     })
 
     describe('fail', function () {
@@ -439,6 +480,14 @@ describe('adapter mocha', function () {
       }
 
       expect(createConfigObject(this.karma).require).not.to.eq('test')
+    })
+
+    it('should ignore property expose from client config', function () {
+      this.karma.config.mocha = {
+        expose: 'body'
+      }
+
+      expect(createConfigObject(this.karma).expose).not.to.eq('body')
     })
 
     it('should merge the globals from client config if they exist', function () {
