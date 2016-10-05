@@ -20,6 +20,13 @@ var includes = function (collection, element, startIndex) {
   }
 }
 
+// Date.now polyfill for IE <= 8
+if (!Date.now) {
+  Date.now = function () {
+    return +new Date()
+  }
+}
+
 var formatError = function (error) {
   var stack = error.stack
   var message = error.message
