@@ -183,11 +183,14 @@ describe('adapter mocha', function () {
       it('should report failed mocha result', function () {
         sandbox.stub(tc, 'result', function (result) {
           expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
-          expect(result.assertionErrors).to.deep.eq([{
+          expect(result.assertionErrors).to.have.length(1)
+          expect(result.assertionErrors[0]).to.deep.eq({
             name: 'AssertionError',
             message: 'Big trouble.',
-            showDiff: false
-          }])
+            showDiff: false,
+            actual: 1,
+            expected: 2
+          })
         })
 
         var mockMochaResult = {
@@ -509,12 +512,12 @@ describe('adapter mocha', function () {
   })
 
   describe('processAssertionError', function () {
-    it('should create object from mocha error', function () {
+    it('should return the error object from mocha error', function () {
       var err = new Error()
       err.name = 'AssertionError'
       err.message = 'expected \'something\' to deeply equal \'something else\''
       err.showDiff = true
-      err.actual = {baz: 'baz', foo: null, bar: function () {}}
+      err.actual = {baz: 'baz', foo: null, bar: 'Something'}
       err.expected = {baz: 42, foo: undefined}
 
       var error = processAssertionError(err)
@@ -523,8 +526,8 @@ describe('adapter mocha', function () {
       expect(error.name).to.equal('AssertionError')
       expect(error.message).to.equal('expected \'something\' to deeply equal \'something else\'')
       expect(error.showDiff).to.be.true
-      expect(error.actual).to.equal('{\n  "bar": [Function]\n  "baz": "baz"\n  "foo": [null]\n}')
-      expect(error.expected).to.equal('{\n  "baz": 42\n  "foo": [undefined]\n}')
+      expect(error.actual).to.deep.equal({baz: 'baz', foo: null, bar: 'Something'})
+      expect(error.expected).to.deep.equal({baz: 42, foo: undefined})
     })
 
     it('should not create object from simple error', function () {
@@ -533,23 +536,6 @@ describe('adapter mocha', function () {
       var error = processAssertionError(err)
 
       expect(error).to.be.undefined
-    })
-
-    it('should not pass actual and expected if showDiff is off', function () {
-      var err = new Error()
-      err.message = 'expected \'something\' to deeply equal \'something else\''
-      err.showDiff = false
-      err.actual = {baz: 'baz', foo: null, bar: function () {}}
-      err.expected = {baz: 42, foo: undefined}
-
-      var error = processAssertionError(err)
-
-      expect(Object.keys(error)).to.be.eql(['name', 'message', 'showDiff'])
-      expect(error.name).to.equal('Error')
-      expect(error.message).to.equal('expected \'something\' to deeply equal \'something else\'')
-      expect(error.showDiff).to.be.false
-      expect(error).to.not.have.property('actual')
-      expect(error).to.not.have.property('expected')
     })
   })
 })

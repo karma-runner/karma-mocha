@@ -126,8 +126,8 @@ On the end of each test `karma-mocha` passes to `karma` result object with field
 * `assertionErrors` List of additional error info: 
     * `name` Error name.
     * `message` Error message.
-    * `actual` Actual data in assertion, serialized to string.
-    * `expected` Expected data in assertion, serialized to string.
+    * `actual` Actual data in assertion
+    * `expected` Expected data in assertion
     * `showDiff` True if it is configured by assertion to show diff.
 * `mocha` An optional object listed if you use the `expose` option
 
