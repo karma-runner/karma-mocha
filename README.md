@@ -9,21 +9,21 @@
 
 ## Installation
 
-The easiest way is to keep `karma-mocha` as a devDependency in your `package.json`.
-```json
-{
-  "devDependencies": {
-    "karma-mocha": "~0.1"
-  }
-}
+Install `karma-mocha` and `mocha` into to your project via `npm`:
+
+```shell
+$ npm install karma-mocha mocha --save-dev
 ```
 
-You can simple do it by:
-```bash
-npm install karma-mocha --save-dev
+`karma-mocha` should work with any version of `mocha`.
+
+Since `karma-mocha` is an adapter for [Karma](http://karma-runner.github.io), you likely have it installed already, but in case you don't:  
+
+```shell
+$ npm install karma --save-dev
 ```
 
-Instructions on how to install `karma` can be found [here.](http://karma-runner.github.io/0.12/intro/installation.html)
+If you're having trouble, Karma provides [detailed instructions](http://karma-runner.github.io/1.0/intro/installation.html) on installation. 
 
 ## Configuration
 Following code shows the default configuration...

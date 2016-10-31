@@ -44,9 +44,6 @@
     "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02",
     "sinon": "^1.17.2"
   },
-  "peerDependencies": {
-    "mocha": "*"
-  },
   "license": "MIT",
   "contributors": [
     "Maksim Ryzhikov <rv.maksim@gmail.com>",
