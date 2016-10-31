@@ -378,8 +378,20 @@ describe('adapter mocha', function () {
         grep: function () {
         },
         run: function () {
+        },
+        timeout: function () {
+        },
+        delay: function () {
         }
       }
+    })
+
+    it('should pass options from opts file', function () {
+      sandbox.spy(this.mockMocha, 'timeout')
+
+      createConfigObject
+
+      createMochaStartFn(this.mockMocha)()
     })
 
     it('should pass grep argument to mocha', function () {
@@ -444,6 +456,19 @@ describe('adapter mocha', function () {
       this.karma.config = null
 
       expect(createConfigObject(this.karma)).to.eq(mochaConfig)
+    })
+
+    it('should set the config with the values from the opts file', function () {
+      this.karma.config = {
+        mocha: {
+          opts: './test/mocha.opts'
+        }
+      }
+
+      var config = createConfigObject(this.karma, window.__mochaOptsConfig)
+
+      expect(config.timeout).to.eq('200')
+      expect(config.globals.indexOf('okGlobalC')).to.eq(2)
     })
 
     it('should return default config if the client config havent properties mocha', function () {

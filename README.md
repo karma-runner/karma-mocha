@@ -111,6 +111,33 @@ module.exports = function(config) {
 };
 ```
 
+If you already have a configuration for Mocha in an opts file
+do this in your Karma configuration
+
+```js
+module.exports = function(config) {
+  config.set({
+    ...
+    client: {
+      mocha:{
+        opts: './path/to/file.opts',
+        ...
+      }
+      ...
+    }
+  });
+};
+```
+
+The plugin reads the opts file. It generates a JS file with 
+the configuration to provide to Mocha.
+
+If you have a configuration in Mocha 
+
+Note: currently the flag `--require` is not supported.
+Note: if you define globals in your Karma config it will be merged with
+the globals coming from the opts file.
+
 ## Internals
 
 On the end of each test `karma-mocha` passes to `karma` result object with fields:

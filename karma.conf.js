@@ -11,6 +11,12 @@ module.exports = function (config) {
 
     autoWatch: true,
 
+    client: {
+      mocha: {
+        opts: './test/mocha.opts'
+      }
+    },
+    
     plugins: [
       require.resolve('./'),
       'karma-chai',
