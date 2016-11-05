@@ -111,6 +111,23 @@ module.exports = function(config) {
 };
 ```
 
+If you already have a configuration for Mocha in an opts file, you can use the `opts` option:
+
+```js
+module.exports = function(config) {
+  config.set({
+    ...
+    client: {
+      mocha: {
+        opts: 'test/mocha.opts' // You can set opts to equal true then plugin will load opts from default location 'test/mocha.opts'
+        ...
+      }
+      ...
+    }
+  });
+};
+```
+
 ## Internals
 
 On the end of each test `karma-mocha` passes to `karma` result object with fields:
