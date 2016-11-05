@@ -8,7 +8,8 @@
     "gitattributes": ".gitattributes"
   },
   "scripts": {
-    "test": "grunt test"
+    "test": "grunt test",
+    "test:lib": "mocha test/lib"
   },
   "repository": {
     "type": "git",

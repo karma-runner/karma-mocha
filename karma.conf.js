@@ -4,7 +4,7 @@ module.exports = function (config) {
 
     files: [
       'src/*.js',
-      'test/*.js'
+      'test/src/*.js'
     ],
 
     browsers: process.env.TRAVIS ? ['Firefox'] : ['Chrome'],
