@@ -12,7 +12,7 @@ module.exports = function (grunt) {
     eslint: {
       target: [
         '<%= files.adapter %>',
-        'gruntfile.js',
+        '*.js',
         'lib/index.js',
         'tasks/*.js',
         'test/**/*.js'
