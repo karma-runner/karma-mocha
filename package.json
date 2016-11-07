@@ -21,7 +21,9 @@
     "mocha"
   ],
   "author": "Vojta Jina <vojta.jina@gmail.com>",
-  "dependencies": {},
+  "dependencies": {
+    "minimist": "1.2.0"
+  },
   "devDependencies": {
     "chai": "^3.4.1",
     "eslint": "^2.0.0",
@@ -42,6 +44,7 @@
     "karma-sinon": "^1.0.3",
     "load-grunt-tasks": "^3.2.0",
     "mocha": "^3.0.0",
+    "mock-fs": "^3.12.1",
     "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02",
     "sinon": "^1.17.2"
   },
