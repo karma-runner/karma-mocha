@@ -101,6 +101,7 @@ describe('adapter mocha', function () {
           expect(result.suite instanceof Array).to.eq(true)
           expect(result.success).to.eq(true)
           expect(result.skipped).to.to.eql(false)
+          expect(result.pending).to.to.eql(false)
           expect(result.log instanceof Array).to.eq(true)
           expect(result.assertionErrors instanceof Array).to.eq(true)
           expect(result.startTime).to.be.at.least(beforeStartTime)
@@ -128,6 +129,7 @@ describe('adapter mocha', function () {
       it('should report skipped result', function () {
         sandbox.stub(tc, 'result', function (result) {
           expect(result.skipped).to.eq(true)
+          expect(result.pending).to.eq(true)
         })
 
         var mockMochaResult = {

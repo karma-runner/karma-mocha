@@ -145,6 +145,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
         suite: [],
         success: test.state === 'passed',
         skipped: skipped,
+        pending: skipped,
         time: skipped ? 0 : test.duration,
         log: test.$errors || [],
         assertionErrors: test.$assertionErrors || [],
