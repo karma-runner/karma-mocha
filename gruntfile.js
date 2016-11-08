@@ -36,8 +36,22 @@ module.exports = function (grunt) {
         commitMessage: 'chore: update contributors'
       }
     },
+    conventionalChangelog: {
+      release: {
+        options: {
+          changelogOpts: {
+            preset: 'angular'
+          }
+        },
+        src: 'CHANGELOG.md'
+      }
+    },
     bump: {
       options: {
+        commitFiles: [
+          'package.json',
+          'CHANGELOG.md'
+        ],
         commitMessage: 'chore: release v%VERSION%',
         pushTo: 'upstream'
       }
@@ -51,9 +65,11 @@ module.exports = function (grunt) {
 
   grunt.registerTask('release', 'Build, bump and publish to NPM.', function (type) {
     grunt.task.run([
-      'build',
       'npm-contributors',
-      'bump:' + (type || 'patch'),
+      'bump:' + (type || 'patch') + ':bump-only',
+      'build',
+      'conventionalChangelog',
+      'bump-commit',
       'npm-publish'
     ])
   })
