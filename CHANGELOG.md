@@ -1,3 +1,19 @@
+<a name="1.3.0"></a>
+# [1.3.0](https://github.com/karma-runner/karma-mocha/compare/v1.2.0...v1.3.0) (2016-11-09)
+
+
+### Bug Fixes
+
+* polyfill Date.now to restore IE compat ([246f25a](https://github.com/karma-runner/karma-mocha/commit/246f25a))
+* **deps:** remove peer dependency on mocha ([0bbf932](https://github.com/karma-runner/karma-mocha/commit/0bbf932)), closes [#114](https://github.com/karma-runner/karma-mocha/issues/114)
+
+
+### Features
+
+* support mocha opts ([11a0dd8](https://github.com/karma-runner/karma-mocha/commit/11a0dd8)), closes [#99](https://github.com/karma-runner/karma-mocha/issues/99)
+
+
+
 <a name="1.2.0"></a>
 # [1.2.0](https://github.com/karma-runner/karma-mocha/compare/v1.1.1...v1.2.0) (2016-09-26)
 
