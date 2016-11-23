@@ -35,6 +35,10 @@ module.exports = function(config) {
 
     files: [
       '*.js'
+    ],
+    
+    plugins: [
+      'karma-mocha'
     ]
   });
 };
@@ -64,7 +68,11 @@ module.exports = function(config) {
         // custom ui, defined in required file above
         ui: 'bdd-lazy-var/global',
       }
-    }
+    },
+    
+    plugins: [
+      'karma-mocha'
+    ]
   });
 };
 ```
