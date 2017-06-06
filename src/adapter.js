@@ -76,17 +76,28 @@ var createMochaReporterNode = function () {
   document.body.appendChild(mochaRunnerNode)
 }
 
+/**
+ * Returns true if mocha config is available.
+ * @param {ContextKarma} karma The context karma object
+ * @return {boolean}
+ */
 var haveMochaConfig = function (karma) {
-  return karma.config && karma.config.mocha
+  return !!(karma.config && karma.config.mocha)
 }
 
-var createMochaReporterConstructor = function (tc, pathname) {
+/**
+ * Creates the mocha reporeter constructor from the karma context and pathname
+ * @param {ContextKarma} karma The context karma object
+ * @param {string} pathname The pathname of the current page
+ * @return {Function}
+ */
+var createMochaReporterConstructor = function (karma, pathname) {
   var isDebugPage = /debug.html$/.test(pathname)
 
   // Set custom reporter on debug page
-  if (isDebugPage && haveMochaConfig(tc) && tc.config.mocha.reporter) {
+  if (isDebugPage && haveMochaConfig(karma) && karma.config.mocha.reporter) {
     createMochaReporterNode()
-    return tc.config.mocha.reporter
+    return karma.config.mocha.reporter
   }
 
   // TODO(vojta): error formatting
@@ -103,11 +114,11 @@ var createMochaReporterConstructor = function (tc, pathname) {
     // - pending
 
     runner.on('start', function () {
-      tc.info({total: runner.total})
+      karma.info({total: runner.total})
     })
 
     runner.on('end', function () {
-      tc.complete({
+      karma.complete({
         coverage: window.__coverage__
       })
     })
@@ -159,16 +170,16 @@ var createMochaReporterConstructor = function (tc, pathname) {
         pointer = pointer.parent
       }
 
-      if (haveMochaConfig(tc) && tc.config.mocha.expose && tc.config.mocha.expose.forEach) {
+      if (haveMochaConfig(karma) && karma.config.mocha.expose && karma.config.mocha.expose.forEach) {
         result.mocha = {}
-        tc.config.mocha.expose.forEach(function (prop) {
+        karma.config.mocha.expose.forEach(function (prop) {
           if (test.hasOwnProperty(prop)) {
             result.mocha[prop] = test[prop]
           }
         })
       }
 
-      tc.result(result)
+      karma.result(result)
     })
   }
 }
@@ -218,7 +229,11 @@ var mochaConfig = {
   globals: ['__cov*']
 }
 
-// Pass options from client.mocha to mocha
+/**
+ * Pass options from client.mocha to mocha
+ * @param {ContextKarma} karma The context karma object
+ * @return {Object}
+ */
 /* eslint-disable no-unused-vars */
 var createConfigObject = function (karma) {
   /* eslint-enable no-unused-vars */
