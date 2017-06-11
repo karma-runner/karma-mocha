@@ -34,7 +34,7 @@
     "grunt": "~1.0",
     "grunt-auto-release": "~0.0.2",
     "grunt-bump": "~0.8.0",
-    "grunt-conventional-changelog": "^6.0.1",
+    "grunt-conventional-changelog": "^6.1.0",
     "grunt-eslint": "^18.0.0",
     "grunt-karma": "2.x",
     "grunt-npm": "~0.0.2",
