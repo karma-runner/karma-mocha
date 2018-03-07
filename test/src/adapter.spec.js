@@ -94,7 +94,7 @@ describe('adapter mocha', function () {
         var beforeStartTime = Date.now()
         var DURATION = 200
 
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           var afterEndTime = Date.now()
           expect(result.id).to.not.be.undefined
           expect(result.description).to.eq('should do something')
@@ -127,7 +127,7 @@ describe('adapter mocha', function () {
       })
 
       it('should report skipped result', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.skipped).to.eq(true)
           expect(result.pending).to.eq(true)
         })
@@ -143,7 +143,7 @@ describe('adapter mocha', function () {
       })
 
       it('should report time 0 for skipped tests', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.skipped).to.eq(true)
           expect(result.time).to.eq(0)
         })
@@ -160,7 +160,7 @@ describe('adapter mocha', function () {
       })
 
       it('should report failed result', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.success).to.to.eql(false)
           expect(result.skipped).to.to.eql(false)
           expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
@@ -183,7 +183,7 @@ describe('adapter mocha', function () {
       })
 
       it('should report failed mocha result', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
           expect(result.assertionErrors).to.deep.eq([{
             name: 'AssertionError',
@@ -213,7 +213,7 @@ describe('adapter mocha', function () {
       })
 
       it('should report suites', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.suite).to.deep.eq(['desc1', 'desc2'])
         })
 
@@ -235,7 +235,7 @@ describe('adapter mocha', function () {
           }
         }
 
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.mocha.body).to.eq('function(){ expect(false).to.be(true) }')
           expect(result.mocha.hello).to.eq('world')
         })
@@ -253,7 +253,7 @@ describe('adapter mocha', function () {
       })
 
       it('should not report mocha properties if `expose` is not configured', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.mocha).to.not.exist
         })
 
@@ -272,7 +272,7 @@ describe('adapter mocha', function () {
 
     describe('fail', function () {
       it('should end test on hook failure', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.success).to.to.eql(false)
           expect(result.skipped).to.to.eql(false)
           expect(result.log).to.deep.eq(['hook failed'])
@@ -291,7 +291,7 @@ describe('adapter mocha', function () {
       })
 
       it('should end the test only once on uncaught exceptions', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           expect(result.success).to.to.eql(false)
           expect(result.skipped).to.to.eql(false)
           expect(result.log).to.deep.eq(['Uncaught error.'])
@@ -311,7 +311,7 @@ describe('adapter mocha', function () {
       })
 
       it('should remove mocha stack entries', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           var log = result.log[0]
           expect(log).to.not.contain('/mocha/mocha.js')
           expect(log).to.contain('/spec/controllers/list/formCtrlSpec.js')
@@ -342,7 +342,7 @@ describe('adapter mocha', function () {
       })
 
       it('should not remove escaped strings containing mocha stack entries', function () {
-        sandbox.stub(tc, 'result', function (result) {
+        sandbox.stub(tc, 'result').callsFake(function (result) {
           var log = result.log[0]
           expect(log).to.contain('something important that contains an escaped mocha stack trace')
         })
