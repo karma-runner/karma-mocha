@@ -133,6 +133,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
       } else {
         test.$errors.push(isDebugPage ? error : simpleError)
         if (assertionError) test.$assertionErrors.push(assertionError)
+        if (error.uncaught) { runner.emit('test end', test) }
       }
     })
 
