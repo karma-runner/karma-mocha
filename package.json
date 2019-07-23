@@ -47,7 +47,7 @@
     "mocha": "^3.0.0",
     "mock-fs": "^4.10.1",
     "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02",
-    "sinon": "^1.17.2"
+    "sinon": "^2.2.0"
   },
   "license": "MIT",
   "contributors": [
