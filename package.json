@@ -22,7 +22,7 @@
   ],
   "author": "Vojta Jina <vojta.jina@gmail.com>",
   "dependencies": {
-    "minimist": "1.2.0"
+    "minimist": "^1.2.3"
   },
   "devDependencies": {
     "chai": "^3.4.1",
