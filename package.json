@@ -47,7 +47,18 @@
     "mocha": "^3.0.0",
     "mock-fs": "^4.10.1",
     "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02",
-    "sinon": "^1.17.2"
+    "sinon": "^1.17.2",
+    "@semantic-release/changelog": "^3.0.6",
+    "@semantic-release/git": "^7.0.18",
+    "semantic-release": "^15.14.0",
+    "@commitlint/cli": "^8.3.4",
+    "@commitlint/config-conventional": "^8.3.4",
+    "husky": "^4.0.3"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
   },
   "license": "MIT",
   "contributors": [
