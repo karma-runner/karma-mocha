@@ -12,7 +12,19 @@ before_install:
 
 before_script:
   - npm install -g grunt-cli
+  - echo "TRAVIS_COMMIT $TRAVIS_COMMIT"
+  - echo "TRAVIS_PULL_REQUEST_SHA $TRAVIS_PULL_REQUEST_SHA"
+  - COMMIT_TO_VALIDATE=${TRAVIS_PULL_REQUEST_SHA:-$TRAVIS_COMMIT}
+  - echo "COMMIT_TO_VALIDATE $COMMIT_TO_VALIDATE"
+  - 'if [ "$VALIDATE_COMMIT_MSG" == "true" ]; then ./scripts/validate-commit-msg.sh $COMMIT_TO_VALIDATE; fi'
 
 script:
   - npm run test:lib
   - grunt
+
+after_success:
+  # run automated release process with semantic-release
+  - echo "TRAVIS_BRANCH=$TRAVIS_BRANCH, TRAVIS_EVENT_TYPE=$TRAVIS_EVENT_TYPE, TRAVIS_NODE_VERSION=$TRAVIS_NODE_VERSION"
+  - if [[ "$TRAVIS_BRANCH" == "master" && "$TRAVIS_EVENT_TYPE" == "push" && "$TRAVIS_NODE_VERSION" == "12" ]]; then
+      npm run semantic-release;
+    fi;
