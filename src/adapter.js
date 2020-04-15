@@ -154,7 +154,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
       }
 
       var pointer = test.parent
-      while (!pointer.root) {
+      while (pointer.parent) {
         result.suite.unshift(pointer.title)
         pointer = pointer.parent
       }

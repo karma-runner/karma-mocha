@@ -126,6 +126,24 @@ describe('adapter mocha', function () {
         expect(tc.result.called).to.eq(true)
       })
 
+      it('should not rely on the root property to determine root', function () {
+        sandbox.stub(tc, 'result', function (result) {
+          expect(result.suite).to.deep.eq([''])
+        })
+
+        var mockMochaResult = {
+          duration: 0,
+          parent: {title: '', parent: {title: 'desc1', root: true}, root: true},
+          state: 'passed',
+          title: 'should do something'
+        }
+
+        runner.emit('test', mockMochaResult)
+        runner.emit('test end', mockMochaResult)
+
+        expect(tc.result.called).to.eq(true)
+      })
+
       it('should report skipped result', function () {
         sandbox.stub(tc, 'result', function (result) {
           expect(result.skipped).to.eq(true)
