@@ -129,7 +129,7 @@ var createMochaReporterConstructor = function (tc, pathname) {
       if (test.type === 'hook') {
         test.$errors = isDebugPage ? [error] : [simpleError]
         test.$assertionErrors = assertionError ? [assertionError] : []
-        runner.emit('test end', test)
+        runner.emit('hook end', test)
       } else {
         test.$errors.push(isDebugPage ? error : simpleError)
         if (assertionError) test.$assertionErrors.push(assertionError)
