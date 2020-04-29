@@ -290,6 +290,21 @@ describe('adapter mocha', function () {
         expect(tc.result.called).to.eq(true)
       })
 
+      it('should not emit test end on hook failure', function () {
+        const testEndStub = sandbox.stub()
+        runner.on('test end', testEndStub)
+
+        var mockMochaHook = {
+          type: 'hook',
+          title: 'scenario "before each" hook',
+          parent: {title: 'desc1', root: true}
+        }
+
+        runner.emit('hook', mockMochaHook)
+        runner.emit('fail', mockMochaHook, {message: 'hook failed'})
+        expect(testEndStub.called).to.eq(false)
+      })
+
       it('should end the test only once on uncaught exceptions', function () {
         sandbox.stub(tc, 'result', function (result) {
           expect(result.success).to.to.eql(false)
