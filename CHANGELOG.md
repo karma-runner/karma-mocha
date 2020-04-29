@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/karma-runner/karma-mocha/compare/v2.0.0...v2.0.1) (2020-04-29)
+
+
+### Bug Fixes
+
+* **deps:** Report fails without emit 'test end' event ([#223](https://github.com/karma-runner/karma-mocha/issues/223)) ([1a8226c](https://github.com/karma-runner/karma-mocha/commit/1a8226c915350fd2e203fb60084642cb14aef498))
+
 # [2.0.0](https://github.com/karma-runner/karma-mocha/compare/v1.3.0...v2.0.0) (2020-04-14)
 
 
