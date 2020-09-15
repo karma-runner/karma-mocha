@@ -177,12 +177,11 @@ var createMochaReporterConstructor = function (tc, pathname) {
   }
 }
 /* eslint-disable no-unused-vars */
-var createMochaStartFn = function (mocha) {
+var createMochaStartFn = function (karma, mocha) {
   /* eslint-enable no-unused-vars */
-  return function (config) {
-    var clientArguments
-    config = config || {}
-    clientArguments = config.args
+  return function () {
+    var config = karma.config || {}
+    var clientArguments = config.args
 
     if (clientArguments) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
