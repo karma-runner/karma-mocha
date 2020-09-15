@@ -209,6 +209,10 @@ var createMochaStartFn = function (mocha) {
       if (clientArguments.grep) {
         mocha.grep(clientArguments.grep)
       }
+
+      if (clientArguments.autoRun === false) {
+        return
+      }
     }
 
     mocha.run()
