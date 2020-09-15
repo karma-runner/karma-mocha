@@ -60,6 +60,9 @@
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
+  "peerDependencies": {
+    "mocha": "^3.0.0"
+  },
   "license": "MIT",
   "contributors": [
     "Maksim Ryzhikov <rv.maksim@gmail.com>",
