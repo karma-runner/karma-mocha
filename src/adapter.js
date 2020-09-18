@@ -176,6 +176,17 @@ var createMochaReporterConstructor = function (tc, pathname) {
     })
   }
 }
+
+var buildGrepExpressionFromString = function (expression) {
+  if (typeof expression !== 'string') {
+    return expression
+  }
+
+  const match = expression.match(/^\/(.*)\/([gimy]+)?$/)
+
+  return match ? new RegExp(match[1], match[2]) : new RegExp(expression)
+}
+
 /* eslint-disable no-unused-vars */
 var createMochaStartFn = function (mocha) {
   /* eslint-enable no-unused-vars */
@@ -188,14 +199,14 @@ var createMochaStartFn = function (mocha) {
       if (Object.prototype.toString.call(clientArguments) === '[object Array]') {
         arrayReduce(clientArguments, function (isGrepArg, arg) {
           if (isGrepArg) {
-            mocha.grep(new RegExp(arg))
+            mocha.grep(buildGrepExpressionFromString(arg))
           } else if (arg === '--grep') {
             return true
           } else {
             var match = /--grep=(.*)/.exec(arg)
 
             if (match) {
-              mocha.grep(new RegExp(match[1]))
+              mocha.grep(buildGrepExpressionFromString(match[1]))
             }
           }
           return false

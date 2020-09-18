@@ -409,6 +409,16 @@ describe('adapter mocha', function () {
       expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/])
     })
 
+    it('should pass full regex grep arguments to mocha', function () {
+      sandbox.spy(this.mockMocha, 'grep')
+
+      createMochaStartFn(this.mockMocha)({
+        args: ['--grep', '/test test/i']
+      })
+
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/i])
+    })
+
     it('should pass grep argument to mocha if we called the run with --grep=xxx', function () {
       sandbox.spy(this.mockMocha, 'grep')
 
@@ -417,6 +427,16 @@ describe('adapter mocha', function () {
       })
 
       expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/])
+    })
+
+    it('should pass full regex grep arguments to mocha when called with --grep=xxx', function () {
+      sandbox.spy(this.mockMocha, 'grep')
+
+      createMochaStartFn(this.mockMocha)({
+        args: ['--grep=/test test/i']
+      })
+
+      expect(this.mockMocha.grep.getCall(0).args).to.deep.eq([/test test/i])
     })
 
     it('should pass grep argument to mocha if config.args contains property grep', function () {
