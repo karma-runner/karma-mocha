@@ -25,8 +25,12 @@
     "minimist": "^1.2.3"
   },
   "devDependencies": {
+    "@commitlint/cli": "^8.3.4",
+    "@commitlint/config-conventional": "^8.3.4",
+    "@semantic-release/changelog": "^3.0.6",
+    "@semantic-release/git": "^7.0.18",
     "chai": "^3.4.1",
-    "eslint": "^4.18.2",
+    "eslint": "^4.19.1",
     "eslint-config-standard": "^5.1.0",
     "eslint-plugin-promise": "^1.0.8",
     "eslint-plugin-react": "^5.2.2",
@@ -38,6 +42,7 @@
     "grunt-eslint": "^18.0.0",
     "grunt-karma": "2.x",
     "grunt-npm": "~0.0.2",
+    "husky": "^4.2.5",
     "karma": "^1.0.0",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^1.0.0",
@@ -45,15 +50,10 @@
     "karma-sinon": "^1.0.3",
     "load-grunt-tasks": "^3.2.0",
     "mocha": "^3.0.0",
-    "mock-fs": "^4.10.1",
-    "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02",
-    "sinon": "^1.17.2",
-    "@semantic-release/changelog": "^3.0.6",
-    "@semantic-release/git": "^7.0.18",
+    "mock-fs": "^4.12.0",
     "semantic-release": "^15.14.0",
-    "@commitlint/cli": "^8.3.4",
-    "@commitlint/config-conventional": "^8.3.4",
-    "husky": "^4.0.3"
+    "shared-karma-files": "git://github.com/karma-runner/shared-karma-files.git#82ae8d02",
+    "sinon": "^1.17.2"
   },
   "husky": {
     "hooks": {
