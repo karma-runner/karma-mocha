@@ -115,6 +115,8 @@ var reportTestResult = function (karma, test) {
   karma.result(result)
 }
 
+var completedTests = new Set()
+
 var createMochaReporterConstructor = function (tc, pathname) {
   var isDebugPage = /debug.html$/.test(pathname)
 
@@ -168,10 +170,12 @@ var createMochaReporterConstructor = function (tc, pathname) {
       } else {
         test.$errors.push(isDebugPage ? error : simpleError)
         if (assertionError) test.$assertionErrors.push(assertionError)
+        if (completedTests.has(test)) reportTestResult(tc, test)
       }
     })
 
     runner.on('test end', function (test) {
+      completedTests.add(test)
       reportTestResult(tc, test)
     })
   }

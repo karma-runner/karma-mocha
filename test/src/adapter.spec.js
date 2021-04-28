@@ -182,6 +182,28 @@ describe('adapter mocha', function () {
         expect(tc.result.called).to.eq(true)
       })
 
+      it('should report failure even after test end', function () {
+        const spy = sandbox.spy(tc, 'result')
+        var mockMochaResult = {
+          parent: {title: 'desc', root: true},
+          state: 'failed',
+          title: 'should do something',
+          $errors: []
+        }
+
+        runner.emit('test end', mockMochaResult)
+        expect(tc.result.calledOnce).to.eq(true)
+        expect(spy.firstCall.args[0]).deep.include({ success: false, skipped: false })
+        expect(spy.firstCall.args[0].log).to.deep.eq([])
+        expect(spy.firstCall.args[0].assertionErrors).to.deep.eq([])
+
+        runner.emit('fail', mockMochaResult, {message: 'Biggest trouble.'})
+        expect(tc.result.calledTwice).to.eq(true)
+        expect(spy.firstCall.args[0]).deep.include({ success: false, skipped: false })
+        expect(spy.secondCall.args[0].log).to.deep.eq(['Biggest trouble.'])
+        expect(spy.firstCall.args[0].assertionErrors).to.deep.eq([])
+      })
+
       it('should report failed mocha result', function () {
         sandbox.stub(tc, 'result', function (result) {
           expect(result.log).to.deep.eq(['Big trouble.', 'Another fail.'])
