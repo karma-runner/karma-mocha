@@ -115,7 +115,7 @@ var reportTestResult = function (karma, test) {
   karma.result(result)
 }
 
-var completedTests = new Set();
+var completedTests = new Set()
 
 var createMochaReporterConstructor = function (tc, pathname) {
   var isDebugPage = /debug.html$/.test(pathname)

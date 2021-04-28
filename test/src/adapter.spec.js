@@ -183,7 +183,7 @@ describe('adapter mocha', function () {
       })
 
       it('should report failure even after test end', function () {
-        const spy = sandbox.spy(tc, 'result');
+        const spy = sandbox.spy(tc, 'result')
         var mockMochaResult = {
           parent: {title: 'desc', root: true},
           state: 'failed',
