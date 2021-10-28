@@ -514,6 +514,17 @@ describe('adapter mocha', function () {
 
       expect(createConfigObject(this.karma).globals).to.deep.eq(['__cov', 'test'])
     })
+
+    it('should throw when rootHooks like {}', function () {
+      this.karma.config.mocha = {
+        rootHooks: {}
+      }
+
+      // more likely to set .rootHooks with unserializable data,
+      // and got into {},
+      // then set .rootHooks to {}
+      expect(() => createConfigObject(this.karma)).to.throw()
+    })
   })
 
   describe('formatError', function () {
