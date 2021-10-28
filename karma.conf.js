@@ -4,7 +4,15 @@ module.exports = function (config) {
 
     files: [
       'src/*.js',
-      'test/src/*.js'
+      'test/**/*.js',
+      {
+        pattern: 'test/**/*.mjs',
+        type: 'module'
+      }
+    ],
+    exclude: [
+      // exclude nodejs only stuff
+      'test/lib/index.spec.js'
     ],
 
     browsers: process.env.TRAVIS ? ['Firefox'] : ['Chrome'],
@@ -17,6 +25,24 @@ module.exports = function (config) {
       'karma-sinon',
       'karma-firefox-launcher',
       'karma-chrome-launcher'
-    ]
+    ],
+
+    client: {
+      mocha: {
+        rootHooks: {
+          type: 'import',
+          value: '/base/test/esm/mochaHooks.mjs'
+        }
+      },
+
+      mocha$Unsupported: {
+        rootHooks: {
+          beforeAll () {
+            throw new Error('not supported')
+          }
+        }
+      }
+
+    }
   })
 }

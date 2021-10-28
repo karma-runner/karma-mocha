@@ -1,4 +1,4 @@
-lib/adapter.js
+# lib/adapter.js
 node_modules
 npm-debug.log
 .idea

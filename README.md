@@ -128,6 +128,35 @@ module.exports = function(config) {
 };
 ```
 
+If you want to use rootHooks, convert to ESM module file.
+```js
+mocha.setup({
+    ...
+    rootHooks: {afterAll},
+})
+```
+```js
+// <project>/path/to/myMochaHooks.mjs
+export const mochaHooks = {afterAll}
+```
+
+```js
+module.exports = function(config) {
+  config.set({
+    ...
+    client: {
+      mocha: {
+        rootHooks: {
+          type: 'import',
+          value: '/base/path/to/myMochaHooks.mjs'
+        }
+      }
+      ...
+    }
+  });
+};
+```
+
 ## Internals
 
 On the end of each test `karma-mocha` passes to `karma` result object with fields:
