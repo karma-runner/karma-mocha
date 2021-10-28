@@ -1,9 +1,9 @@
-// // simulate slow `import()`, slow toplevel await
-// await new Promise((resolve)=>{
-//     setTimeout(()=>{
-//         resolve(undefined)
-//     }, 2000)
-// })
+// simulate slow `import()`, slow toplevel await
+await new Promise((resolve)=>{
+    setTimeout(()=>{
+        resolve(undefined)
+    }, 2000)
+})
 const mod = 1
 
 describe('slowESM', function () {
