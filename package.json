@@ -38,7 +38,7 @@
     "grunt-eslint": "^18.0.0",
     "grunt-karma": "2.x",
     "grunt-npm": "~0.0.2",
-    "karma": "^1.0.0",
+    "karma": "^6.3.14",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^1.0.0",
     "karma-firefox-launcher": "^1.0.0",
